@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Musicians - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Musicians & Bands</h1>
+
+    <div class="filter-section">
+        <h3>Filter Musicians</h3>
+        <form method="GET" class="filter-form">
+            <div class="form-group">
+                {{ form.genre.label(class="form-label") }}
+                {{ form.genre(class="form-control", placeholder="e.g., Folk or DJ", value=request.args.get('genre', '')) }}
+            </div>
+            <div class="form-group">
+                {{ form.city.label(class="form-label") }}
+                {{ form.city(class="form-control", placeholder="e.g., Almaty", value=request.args.get('city', '')) }}
+            </div>
+            <div class="form-group">
+                {{ form.max_price.label(class="form-label") }}
+                {{ form.max_price(class="form-control", placeholder="e.g., 200000", value=request.args.get('max_price', '')) }}
+            </div>
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('musicians') }}" class="btn btn-outline">Show All</a>
+            </div>
+        </form>
+    </div>
+
+    {% if musicians and musicians|length > 0 %}
+        <div class="venues-grid">
+            {% for artist in musicians %}
+                <div class="venue-card">
+                    <div class="venue-image">
+                        {% if artist.image_url %}
+                            <img src="{{ url_for('static', filename=artist.image_url) }}" alt="{{ artist.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        {% else %}
+                            🎵
+                        {% endif %}
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-title">{{ artist.name }}</h3>
+                        {% if artist.genre %}<p>{{ artist.genre }}</p>{% endif %}
+                        {% if artist.description %}
+                            <p>{{ artist.description }}</p>
+                        {% endif %}
+                        
+                        <div class="venue-price">
+                            {% if artist.price_per_event %}
+                                {{ "{:,}".format(artist.price_per_event|int) }} KZT per event
+                            {% elif artist.price_per_hour %}
+                                {{ "{:,}".format(artist.price_per_hour|int) }} KZT per hour
+                            {% else %}
+                                Contact for pricing
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <a href="{{ url_for('musician_detail', id=artist.id) }}" class="btn btn-outline" style="flex: 1;">View Details</a>
+                            <a href="{{ url_for('book_musician', id=artist.id) }}" class="btn btn-primary" style="flex: 1;">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center" style="margin: 3rem 0;">
+            <p>No musicians found. Please add data to <code>instance/musicians.csv</code>.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

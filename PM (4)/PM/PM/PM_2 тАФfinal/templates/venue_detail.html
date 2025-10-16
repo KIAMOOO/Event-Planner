@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block title %}{{ venue.name }} - Event Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Custom scrollbar styling */
+.menu-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.menu-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="venue-header">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+            <div>
+                <h1>{{ venue.name }}</h1>
+                <p style="color: var(--text-light); font-size: 1.1rem;">📍 {{ venue.address }}</p>
+            </div>
+            <div class="venue-price" style="font-size: 1.5rem;">
+                {{ "{:,}".format(venue.price_per_person) }} KZT per person
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 2rem; margin-bottom: 2rem;" class="venue-detail-flex">
+            <div class="venue-image" style="width: 400px; height: 250px; border-radius: 15px; overflow: hidden;">
+                {% if venue.image_url %}
+                    <img src="{{ url_for('static', filename=venue.image_url) }}" alt="{{ venue.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    🏛️
+                {% endif %}
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 1.1rem; line-height: 1.8;">{{ venue.description }}</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                    <div>
+                        <strong>Capacity:</strong> {{ venue.capacity_min }}-{{ venue.capacity_max }} guests
+                    </div>
+                    <div>
+                        <strong>District:</strong> {{ venue.district }}
+                    </div>
+                    <div>
+                        <strong>Phone:</strong> {{ venue.phone }}
+                    </div>
+                    <div>
+                        <strong>Email:</strong> {{ venue.email }}
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <a href="{{ url_for('book_venue', venue_id=venue.id) }}" class="btn btn-primary" style="margin-right: 1rem;">Book This Venue</a>
+                    <a href="{{ url_for('venues') }}" class="btn btn-outline">Back to Venues</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="venue-details">
+        <div class="detail-section" style="width: 100%; max-width: none; margin-bottom: 2rem;">
+            <h3>Menu Options</h3>
+            {% if venue.menu_items %}
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                    <!-- Shyngyskhan Restaurant - Two Menu Packages with Single Scroll -->
+                    <div class="menu-scroll" style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem; border: 1px solid #e9ecef; border-radius: 8px; background: white;">
+                        
+                        <!-- Menu 1: Premium All Inclusive Package -->
+                        <div class="menu-category" style="padding: 1.5rem; border-bottom: 1px solid #e9ecef;">
+                            <h4 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; color: #2c3e50;">
+                                👑 Premium All Inclusive Package
+                                <span style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 25px; font-size: 1.2rem; margin-left: 1rem;">25,000 ₸ per person</span>
+                            </h4>
+                            <p style="color: #666; margin-bottom: 1.5rem;">Complete premium package with musical equipment, LED screen, buffet, decorations, premium drinks, and New Year snacks</p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                                {% for item in venue.menu_items %}
+                                    {% if item.category == 'premium_package' and item.name != 'Premium All Inclusive Package' %}
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+                                            <strong style="color: #2c3e50;">{{ item.name }}</strong>
+                                            {% if item.description %}
+                                                <p style="font-size: 0.9rem; color: #666; margin: 0.3rem 0 0 0;">{{ item.description }}</p>
+                                            {% endif %}
+                                            {% if item.price > 0 %}
+                                                <div style="font-weight: bold; margin-top: 0.5rem; color: #e74c3c;">{{ "{:,}".format(item.price) }} KZT</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Menu 2: Banquet Menu Package -->
+                        <div class="menu-category" style="padding: 1.5rem;">
+                            <h4 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; color: #2c3e50;">
+                                🍽️ Banquet Menu Package
+                                <span style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 25px; font-size: 1.2rem; margin-left: 1rem;">16,000 ₸ per person</span>
+                            </h4>
+                            <p style="color: #666; margin-bottom: 1.5rem;">Includes cold appetizers, hot appetizers, salads, and various assortments</p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                                {% for item in venue.menu_items %}
+                                    {% if item.category == 'banquet_package' and item.name != 'Banquet Menu Package' %}
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+                                            <strong style="color: #2c3e50;">{{ item.name }}</strong>
+                                            {% if item.description %}
+                                                <p style="font-size: 0.9rem; color: #666; margin: 0.3rem 0 0 0;">{{ item.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                {% else %}
+                    <!-- Regular Menu Display for Other Venues -->
+                    <div class="menu-scroll" style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem; border: 1px solid #e9ecef; border-radius: 8px; background: white;">
+                        {% set menu_categories = venue.menu_items | groupby('category') %}
+                        {% for category, items in menu_categories %}
+                            <div class="menu-category" style="padding: 1.5rem; border-bottom: 1px solid #e9ecef;">
+                                <h4 style="color: #2c3e50; margin-bottom: 1rem;">
+                                    {% if category == 'appetizer' %}🥗 Appetizers
+                                    {% elif category == 'main' %}🍽️ Main Courses
+                                    {% elif category == 'dessert' %}🍰 Desserts
+                                    {% elif category == 'drink' %}🥤 Beverages
+                                    {% elif category == 'package' %}📦 Menu Packages
+                                    {% elif category == 'salad' %}🥙 Salads
+                                    {% else %}🍴 {{ category.title() }}
+                                    {% endif %}
+                                </h4>
+                                
+                                {% for item in items %}
+                                    <div class="menu-item" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: flex-start;">
+                                        <div style="flex: 1;">
+                                            <strong style="color: #2c3e50;">{{ item.name }}</strong>
+                                            {% if item.description %}
+                                                <p style="font-size: 0.9rem; color: #666; margin: 0.2rem 0 0 0;">{{ item.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="menu-price" style="color: #e74c3c; font-weight: bold; margin-left: 1rem;">
+                                            {% if item.price == 0 %}
+                                                Included
+                                            {% else %}
+                                                {{ "{:,}".format(item.price) }} KZT
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Custom menu options available. Please contact the venue for detailed menu planning.</p>
+            {% endif %}
+        </div>
+
+        <div class="detail-section" style="width: 100%; max-width: none; margin-bottom: 2rem;">
+            <h3>Available Halls</h3>
+            {% if venue.halls %}
+                <div class="halls-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    {% for hall in venue.halls %}
+                        <div class="hall-card" style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px; border: 1px solid #e9ecef;">
+                            <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">{{ hall.name }}</h4>
+                            <p class="hall-capacity" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.5rem;">Capacity: {{ hall.capacity }} guests</p>
+                            <p style="color: #666;">{{ hall.description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Hall information will be provided upon inquiry.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="detail-section" style="margin-top: 2rem;">
+        <h3>Event Timeline Planning</h3>
+        <p>Customized timelines for {{ venue.name }} based on our capabilities:</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+            {% if 'wedding' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Wedding (Үйлену тойы)</h4>
+                {% if venue.name == 'Navat Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 17:00 - Guest arrival & traditional welcome</li>
+                    <li>🕕 18:00 - Intimate ceremony & blessings</li>
+                    <li>🕘 19:00 - Traditional Kazakh dinner service</li>
+                    <li>🕘 20:00 - Family toasts & celebrations</li>
+                    <li>🕙 21:00 - Dancing & entertainment</li>
+                </ul>
+                {% elif venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 16:00 - Premium welcome reception</li>
+                    <li>🕕 17:00 - Grand traditional ceremony</li>
+                    <li>🕘 20:00 - Luxury banquet dinner</li>
+                    <li>🕘 21:00 - VIP toasts and speeches</li>
+                    <li>🕙 22:00 - Premium entertainment & dancing</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 17:00 - Elegant arrival & cocktails</li>
+                    <li>🕕 18:00 - Sophisticated ceremony</li>
+                    <li>🕘 19:00 - International cuisine dinner</li>
+                    <li>🕘 20:00 - Formal toasts & presentations</li>
+                    <li>🕙 21:00 - Live music & dancing</li>
+                </ul>
+                {% else %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 16:00 - Guest arrival & welcome drinks</li>
+                    <li>🕕 17:00 - Traditional ceremony</li>
+                    <li>🕘 20:00 - Dinner service begins</li>
+                    <li>🕘 21:00 - Toasts and speeches</li>
+                    <li>🕙 22:00 - Dancing and entertainment</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'tusau_keser' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Tusau Keser (Тұсау кесер)</h4>
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 15:00 - Family gathering & preparations</li>
+                    <li>🕕 16:00 - Traditional ceremony & blessings</li>
+                    <li>🕖 17:00 - Premium photography session</li>
+                    <li>🕘 18:00 - Luxury celebratory feast</li>
+                    <li>🕙 19:00 - Gift presentation & family time</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 15:00 - Elegant family gathering</li>
+                    <li>🕕 16:00 - Sophisticated ceremony</li>
+                    <li>🕖 17:00 - Professional photography</li>
+                    <li>🕘 18:00 - International cuisine meal</li>
+                    <li>🕙 19:00 - Gift presentation & celebration</li>
+                </ul>
+                {% else %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 15:00 - Family gathering</li>
+                    <li>🕕 16:00 - Traditional ceremony</li>
+                    <li>🕖 17:00 - Photography session</li>
+                    <li>🕘 18:00 - Celebratory meal</li>
+                    <li>🕙 19:00 - Gift presentation</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'corporate_event' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Corporate Events</h4>
+                {% if venue.name == 'Navat Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 09:00 - Arrival & traditional welcome</li>
+                    <li>🕘 10:00 - Business presentations</li>
+                    <li>🕐 13:00 - Traditional Kazakh lunch</li>
+                    <li>🕑 14:00 - Team building activities</li>
+                    <li>🕕 18:00 - Networking dinner</li>
+                </ul>
+                {% elif venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 09:00 - Premium arrival & reception</li>
+                    <li>🕘 10:00 - Executive presentations</li>
+                    <li>🕐 13:00 - Luxury banquet lunch</li>
+                    <li>🕑 14:00 - VIP workshops & meetings</li>
+                    <li>🕕 18:00 - Premium networking dinner</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 09:00 - Elegant registration & coffee</li>
+                    <li>🕘 10:00 - International business presentations</li>
+                    <li>🕐 13:00 - International cuisine lunch</li>
+                    <li>🕑 14:00 - Professional workshops</li>
+                    <li>🕕 18:00 - Sophisticated networking dinner</li>
+                </ul>
+                {% else %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 09:00 - Registration & coffee</li>
+                    <li>🕘 10:00 - Opening presentations</li>
+                    <li>🕐 13:00 - Lunch break</li>
+                    <li>🕑 14:00 - Workshops/meetings</li>
+                    <li>🕕 18:00 - Networking dinner</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'birthday' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Birthday Celebrations</h4>
+                {% if venue.name == 'Navat Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 18:00 - Guest arrival & welcome</li>
+                    <li>🕕 18:30 - Birthday greetings & toasts</li>
+                    <li>🕘 19:00 - Traditional birthday dinner</li>
+                    <li>🕘 20:00 - Cake cutting ceremony</li>
+                    <li>🕙 20:30 - Dancing & celebration</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'kudalyk' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Kudalyk (Құдалық)</h4>
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 15:00 - Family gathering & traditions</li>
+                    <li>🕕 16:00 - Kudalyk ceremony & rituals</li>
+                    <li>🕖 17:00 - Traditional games & activities</li>
+                    <li>🕘 18:00 - Luxury traditional feast</li>
+                    <li>🕙 19:00 - Music & celebration</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 15:00 - Elegant family gathering</li>
+                    <li>🕕 16:00 - Sophisticated ceremony</li>
+                    <li>🕖 17:00 - Cultural activities</li>
+                    <li>🕘 18:00 - International fusion meal</li>
+                    <li>🕙 19:00 - Live music & celebration</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'betashar' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Betashar (Беташар)</h4>
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 16:00 - Family preparation & gathering</li>
+                    <li>🕕 17:00 - Traditional Betashar ceremony</li>
+                    <li>🕖 18:00 - Traditional games & entertainment</li>
+                    <li>🕘 19:00 - Premium celebratory dinner</li>
+                    <li>🕙 20:00 - Traditional music & dancing</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 16:00 - Elegant preparation</li>
+                    <li>🕕 17:00 - Sophisticated ceremony</li>
+                    <li>🕖 18:00 - Cultural entertainment</li>
+                    <li>🕘 19:00 - International cuisine dinner</li>
+                    <li>🕙 20:00 - Live music & celebration</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'anniversary' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Anniversary Celebrations</h4>
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 18:00 - Arrival & welcome reception</li>
+                    <li>🕕 18:30 - Anniversary toasts & speeches</li>
+                    <li>🕘 19:00 - Luxury anniversary dinner</li>
+                    <li>🕘 20:00 - Special presentations & gifts</li>
+                    <li>🕙 20:30 - Dancing & celebration</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 18:00 - Elegant arrival & cocktails</li>
+                    <li>🕕 18:30 - Sophisticated toasts</li>
+                    <li>🕘 19:00 - International anniversary dinner</li>
+                    <li>🕘 20:00 - Special presentations</li>
+                    <li>🕙 20:30 - Live music & dancing</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if 'graduation_prom' in venue.event_types %}
+            <div>
+                <h4 style="color: var(--accent-burgundy);">Graduation / Prom</h4>
+                {% if venue.name == 'Shyngyskhan Restaurant' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 18:00 - Grand entrance & welcome</li>
+                    <li>🕕 18:30 - Graduation ceremonies & awards</li>
+                    <li>🕘 19:00 - Premium celebratory dinner</li>
+                    <li>🕘 20:00 - Speeches & presentations</li>
+                    <li>🕙 20:30 - Dancing & entertainment</li>
+                </ul>
+                {% elif venue.name == 'Rixos Hotel Almaty' %}
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>🕐 18:00 - Elegant arrival & reception</li>
+                    <li>🕕 18:30 - Formal ceremonies</li>
+                    <li>🕘 19:00 - International cuisine dinner</li>
+                    <li>🕘 20:00 - Awards & presentations</li>
+                    <li>🕙 20:30 - Live music & dancing</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="hero" style="margin-top: 3rem; text-align: center;">
+        <h3>Ready to Book {{ venue.name }}?</h3>
+        <p>Secure your date with a simple booking process. Our team will help you plan every detail of your special event.</p>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center;">
+            <a href="{{ url_for('book_venue', venue_id=venue.id) }}" class="btn btn-primary">Book Now</a>
+            <a href="tel:{{ venue.phone }}" class="btn btn-secondary">Call {{ venue.phone }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

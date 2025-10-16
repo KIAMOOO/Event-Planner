@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Toy Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+.profile-hero {
+    background: var(--gradient-accent);
+    color: white;
+    padding: 4rem 0;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.profile-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+}
+
+.profile-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-icon {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    margin: 0 auto 2rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.login-section {
+    max-width: 500px;
+    margin: 0 auto 3rem;
+}
+
+.login-card {
+    background: white;
+    padding: 3rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-accent);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin: 0 auto 1rem;
+}
+
+.login-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+    margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.enhanced-form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.enhanced-form-control {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    border: 2px solid var(--primary-beige);
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    transition: var(--transition);
+    background: white;
+}
+
+.enhanced-form-control:focus {
+    outline: none;
+    border-color: var(--accent-burgundy);
+    box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
+}
+
+.enhanced-form-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: var(--gradient-accent);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139, 38, 53, 0.3);
+}
+
+.submit-btn:hover::before {
+    left: 100%;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-accent);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    margin: 0 auto 1.5rem;
+}
+
+.feature-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+    margin-bottom: 1rem;
+}
+
+.feature-description {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.cta-section {
+    background: var(--soft-sand);
+    padding: 3rem;
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.cta-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+    margin-bottom: 1rem;
+}
+
+.cta-description {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.security-info {
+    background: #F0F9FF;
+    border: 1px solid #0EA5E9;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.security-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #0369A1;
+    margin-bottom: 1rem;
+}
+
+.security-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.security-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #0369A1;
+}
+
+.security-list li:last-child {
+    margin-bottom: 0;
+}
+
+.security-icon {
+    color: #0EA5E9;
+    font-size: 1.1rem;
+    margin-top: 0.1rem;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .login-card {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .feature-card {
+        padding: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="profile-hero">
+        <div class="profile-hero-content">
+            <div class="hero-icon">👤</div>
+            <h1 class="hero-title">My Profile</h1>
+            <p class="hero-subtitle">Access your complete event planning dashboard and booking history</p>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="login-section">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">🔐</div>
+                <h2 class="login-title">Access Your Profile</h2>
+                <p class="login-subtitle">Enter your email address to view your booking history and profile information</p>
+            </div>
+            
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="enhanced-form-group">
+                    <label class="enhanced-form-label" for="{{ form.email.id }}">
+                        📧 Email Address
+                    </label>
+                    {{ form.email(class="enhanced-form-control", placeholder="Enter your email address") }}
+                    {% if form.email.errors %}
+                        <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                            {% for error in form.email.errors %}
+                                <div>⚠️ {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    🚀 View My Profile
+                </button>
+            </form>
+
+            <div class="security-info">
+                <div class="security-title">
+                    <span>🔒</span>
+                    <span>Why do we need your email?</span>
+                </div>
+                <ul class="security-list">
+                    <li>
+                        <span class="security-icon">🛡️</span>
+                        <span><strong>Security:</strong> We protect your booking information with email verification</span>
+                    </li>
+                    <li>
+                        <span class="security-icon">🔐</span>
+                        <span><strong>Privacy:</strong> Only you can access your booking history with your email</span>
+                    </li>
+                    <li>
+                        <span class="security-icon">📱</span>
+                        <span><strong>Convenience:</strong> Access your bookings from any device without creating an account</span>
+                    </li>
+                    <li>
+                        <span class="security-icon">🔄</span>
+                        <span><strong>Updates:</strong> We keep your information synchronized across all bookings</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Booking Dashboard</h3>
+            <p class="feature-description">View all your bookings in a beautiful timeline format with detailed information about venues, hosts, and musicians.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3 class="feature-title">Event Statistics</h3>
+            <p class="feature-description">Track your event planning history with comprehensive statistics and spending insights.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Quick Actions</h3>
+            <p class="feature-description">Easily book new venues, find hosts, hire musicians, or share feedback with our streamlined interface.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Event Management</h3>
+            <p class="feature-description">Manage your upcoming events, view past celebrations, and keep track of all your special requests.</p>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+        <h2 class="cta-title">Don't have any bookings yet?</h2>
+        <p class="cta-description">
+            Explore our amazing venues, talented hosts, and incredible musicians to start planning your perfect celebration in Kazakhstan!
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('venues') }}" class="btn btn-primary btn-large">🏛️ Browse Venues</a>
+            <a href="{{ url_for('hosts') }}" class="btn btn-secondary btn-large">🎤 Find Hosts</a>
+            <a href="{{ url_for('musicians') }}" class="btn btn-secondary btn-large">🎵 Book Musicians</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
