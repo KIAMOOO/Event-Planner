@@ -21,10 +21,10 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Create upload directory if it doesn't exist
+# Create upload directory if it does not exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Models
+# Models of User
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -112,7 +112,7 @@ class Feedback(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='new')  # new, reviewed, resolved
 
-# Forms
+# Forms of Venue
 class VenueFilterForm(FlaskForm):
     event_type = SelectField('Event Type', choices=[
         ('', 'All Events'),
@@ -195,13 +195,13 @@ def find_or_create_user(name, email, phone):
     """Find existing user by email or create new one"""
     user = User.query.filter_by(email=email).first()
     if user:
-        # Update user info if it has changed
+        #Update user info if it has changed
         user.name = name
         user.phone = phone
         db.session.commit()
         return user
     else:
-        # Create new user
+        #Create new user with ID
         new_user = User(name=name, email=email, phone=phone)
         db.session.add(new_user)
         db.session.flush()  # Get the user ID
@@ -1105,3 +1105,4 @@ def add_sample_data():
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
+
