@@ -1,4 +1,4 @@
-# 🎭 Toy Planner - Kazakhstan Event Planning Platform
+# 🎭 Event Planner - Kazakhstan Event Planning Platform
 
 A modern Flask-based event planning platform designed specifically for the Kazakhstan market, featuring traditional ceremonies like Tusau Keser, Kudalyk, and modern weddings with cultural authenticity.
 
@@ -163,3 +163,4 @@ For questions about Kazakhstan event planning traditions or platform features, p
 **Made with ❤️ for Kazakhstan** 🇰🇿
 
 *Celebrating traditions while embracing modern convenience*
+
