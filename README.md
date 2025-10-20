@@ -75,24 +75,6 @@ toy-planner/
     └── uploads/         # File uploads
 ```
 
-## 🏢 Sample Venues
-
-The application comes with 3 pre-configured venues:
-
-1. **Grand Almaty Hotel** (Bostandyk)
-   - Capacity: 50-300 guests
-   - Price: 12,000 KZT per person
-   - Events: Wedding, Corporate, Tusau Keser
-
-2. **Kok-Tobe Restaurant** (Medeu)
-   - Capacity: 30-200 guests
-   - Price: 15,000 KZT per person
-   - Events: Wedding, Tusau Keser, Kudalyk
-
-3. **Atakent Palace** (Almaly)
-   - Capacity: 100-500 guests
-   - Price: 8,000 KZT per person
-   - Events: Corporate, Wedding
 
 ## 🎯 User Journey Example
 
