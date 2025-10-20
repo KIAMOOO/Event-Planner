@@ -1,6 +1,5 @@
 # 🎭 Event Planner - Kazakhstan Event Planning Platform
 
-my update 
 A modern Flask-based event planning platform designed specifically for the Kazakhstan market, featuring traditional ceremonies like Tusau Keser, Kudalyk, and modern weddings with cultural authenticity.
 
 ## ✨ Features
