@@ -21,10 +21,10 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Create upload directory if it doesn't exist
+# Create upload directory if it does not exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Models
+# Models of User
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -32,7 +32,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
+    # Relationships of booking
     bookings = db.relationship('Booking', backref='user', lazy=True)
 
 class Venue(db.Model):
@@ -91,6 +91,7 @@ class Booking(db.Model):
     selected_hall = db.relationship('Hall', backref='bookings')
     guests = db.relationship('Guest', backref='booking', lazy=True, cascade='all, delete-orphan')
 
+# Guest
 class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'), nullable=False)
@@ -112,7 +113,7 @@ class Feedback(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='new')  # new, reviewed, resolved
 
-# Forms
+# Forms of Venue filter
 class VenueFilterForm(FlaskForm):
     event_type = SelectField('Event Type', choices=[
         ('', 'All Events'),
@@ -1105,3 +1106,4 @@ def add_sample_data():
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
+
