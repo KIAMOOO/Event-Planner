@@ -1,0 +1,13 @@
+name,genre,description,city,members,price_per_event,price_per_hour,phone,email,image_url,availability
+Kairat Nurtas,Pop,One of the most famous Kazakh pop singers,Almaty,1,350000,,+7 701 111 1111,kairat@example.com,images/kairat.jpeg,2025-10-05;2025-10-18;2025-10-25
+Zhanar Dugalova,Pop,Winner of Turkvision Song Contest 2014,Astana,1,300000,,+7 701 222 2222,zhdugalova@example.com,images/zhanar.jpg,2025-10-07;2025-10-14;2025-10-28
+Dimash Kudaibergen,Classical Crossover,Internationally recognized Kazakh singer with unique vocal range,Almaty,1,500000,,+7 701 333 3333,dimash@example.com,images/dimash.jfif,2025-10-10;2025-10-17;2025-10-29
+Madina Saduakasova,Pop,Popular Kazakh pop and estrada singer,Almaty,1,280000,,+7 701 444 4444,madina@example.com,images/madina.webp,2025-10-06;2025-10-20;2025-10-27
+Moldanazar,Indie Pop,Famous Kazakh indie-pop band,Almaty,4,400000,,+7 701 555 5555,moldanazar@example.com,images/moldanazar.jpg,2025-10-08;2025-10-15;2025-10-26
+Aikyn Tolypbergen,Pop,Well-known Kazakh pop singer and songwriter,Astana,1,270000,,+7 701 666 6666,aikyn@example.com,images/Aykin.jpg,2025-10-09;2025-10-19;2025-10-30
+Erke Esmahan,Pop,Famous Kazakh female pop singer,Astana,1,250000,,+7 701 777 7777,erke@example.com,images/erke.jpg,2025-10-11;2025-10-21;2025-10-31
+Ninety One,Q-pop,Pioneers of Q-pop boyband movement,Almaty,5,600000,,+7 701 888 8888,ninetyone@example.com,images/ninetyone.jpg,2025-10-12;2025-10-22;2025-11-01
+Ayau,Ethno-pop,Modern ethno-pop group blending traditions and pop,Almaty,4,320000,,+7 701 999 9999,ayau@example.com,images/ayau.jpg,2025-10-13;2025-10-23;2025-11-02
+Nazima,Pop,Well-known Kazakh pop-rap singer,Shymkent,6,250000,,+7 702 111 2222,altynshash@example.com,images/nazima.jpeg,2025-10-14;2025-10-24;2025-11-03
+Alem Band,Pop Rock,Kazakh pop-rock group performing live concerts,Astana,4,350000,,+7 702 333 4444,alem@example.com,images/alem.jpg,2025-10-15;2025-10-25;2025-11-04
+Zhigitter,Ethno Pop,Kazakh boyband mixing pop with national traditions,Almaty,5,300000,,+7 702 555 6666,zhigitter@example.com,images/jigi.jpg,2025-10-16;2025-10-26;2025-11-05

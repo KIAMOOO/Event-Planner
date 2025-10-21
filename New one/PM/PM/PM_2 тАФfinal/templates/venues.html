@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Venues - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-3">Find Your Perfect Venue</h1>
+    
+    <div class="filter-section">
+        <h3>Filter Venues</h3>
+        <form method="GET" class="filter-form">
+            <div class="form-group">
+                {{ form.event_type.label(class="form-label") }}
+                {{ form.event_type(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.district.label(class="form-label") }}
+                {{ form.district(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.guest_count.label(class="form-label") }}
+                {{ form.guest_count(class="form-control", placeholder="e.g., 150") }}
+            </div>
+            <div class="form-group">
+                {{ form.max_price.label(class="form-label") }}
+                {{ form.max_price(class="form-control", placeholder="e.g., 15000") }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+
+    {% if venues %}
+        <div class="venues-grid">
+            {% for venue in venues %}
+                <div class="venue-card">
+                    <div class="venue-image">
+                        {% if venue.image_url %}
+                            <img src="{{ url_for('static', filename=venue.image_url) }}" alt="{{ venue.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        {% else %}
+                            🏛️
+                        {% endif %}
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-title">{{ venue.name }}</h3>
+                        <p>{{ venue.description[:100] }}...</p>
+                        
+                        <div class="venue-info">
+                            <span>📍 {{ venue.district }}</span>
+                            <span>👥 {{ venue.capacity_min }}-{{ venue.capacity_max }} guests</span>
+                        </div>
+                        
+                        <div class="venue-price">
+                            {{ "{:,}".format(venue.price_per_person) }} KZT per person
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <a href="{{ url_for('venue_detail', venue_id=venue.id) }}" class="btn btn-outline" style="flex: 1;">View Details</a>
+                            <a href="{{ url_for('book_venue', venue_id=venue.id, event_type=request.args.get('event_type', 'wedding')) }}" class="btn btn-primary" style="flex: 1;">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center" style="margin: 3rem 0;">
+            <h3>No venues found matching your criteria</h3>
+            <p>Try adjusting your filters or <a href="{{ url_for('venues') }}">browse all venues</a></p>
+        </div>
+    {% endif %}
+
+
+    <!-- Popular Districts Section -->
+    <section class="hero" style="margin-top: 3rem;">
+        <h2>Popular Districts in Almaty</h2>
+        <div class="event-types" style="margin-top: 2rem;">
+            <a href="{{ url_for('venues', district='Bostandyk') }}" class="event-card">
+                <div class="event-icon">🏙️</div>
+                <h4>Bostandyk</h4>
+                <p>Modern venues with excellent accessibility and premium facilities.</p>
+            </a>
+            <a href="{{ url_for('venues', district='Medeu') }}" class="event-card">
+                <div class="event-icon">🏔️</div>
+                <h4>Medeu</h4>
+                <p>Scenic mountain venues perfect for outdoor celebrations.</p>
+            </a>
+            <a href="{{ url_for('venues', district='Almaly') }}" class="event-card">
+                <div class="event-icon">🏢</div>
+                <h4>Almaly</h4>
+                <p>Central location with traditional and modern venue options.</p>
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-submit form when filters change
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInputs = document.querySelectorAll('.filter-form select, .filter-form input');
+    filterInputs.forEach(input => {
+        if (input.type !== 'submit') {
+            input.addEventListener('change', function() {
+                // Small delay to allow user to make multiple selections
+                setTimeout(() => {
+                    this.form.submit();
+                }, 300);
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

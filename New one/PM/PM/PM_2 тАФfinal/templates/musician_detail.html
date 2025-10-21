@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Musician Details - {{ musician.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('musicians') }}" class="btn btn-outline">← Back to Musicians</a>
+    <div class="venue-detail" style="margin-top: 1rem;">
+        <div class="venue-header">
+            <div class="venue-content" style="width: 100%;">
+                <h1 class="venue-title">{{ musician.name }}</h1>
+                <div class="venue-info" style="display: grid; gap: .5rem; margin-top: .5rem;">
+                    {% if musician.email %}<div>✉️ Email: <a href="mailto:{% if musician.email %}{{ musician.email }}{% endif %}">{{ musician.email }}</a></div>{% endif %}
+                    {% if musician.phone %}<div>📞 Phone: <a href="tel:{% if musician.phone %}{{ musician.phone }}{% endif %}">{{ musician.phone }}</a></div>{% endif %}
+                    {% if musician.availability %}<div>🗓️ Availability: {{ musician.availability }}</div>{% endif %}
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    {% if musician.phone %}<a href="tel:{{ musician.phone }}" class="btn btn-outline" style="flex: 1;">Call</a>{% endif %}
+                    {% if musician.email %}<a href="mailto:{{ musician.email }}" class="btn btn-primary" style="flex: 1;">Email</a>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
