@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Host Details - {{ host.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('hosts') }}" class="btn btn-outline">← Back to Hosts</a>
+    <div class="venue-detail" style="margin-top: 1rem;">
+        <div class="venue-header">
+            <div class="venue-content" style="width: 100%;">
+                <h1 class="venue-title">{{ host.name }}</h1>
+                <div class="venue-info" style="display: grid; gap: .5rem; margin-top: .5rem;">
+                    {% if host.email %}<div>✉️ Email: <a href="mailto:{% if host.email %}{{ host.email }}{% endif %}">{{ host.email }}</a></div>{% endif %}
+                    {% if host.phone %}<div>📞 Phone: <a href="tel:{% if host.phone %}{{ host.phone }}{% endif %}">{{ host.phone }}</a></div>{% endif %}
+                    {% if host.availability %}<div>🗓️ Availability: {{ host.availability }}</div>{% endif %}
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    {% if host.phone %}<a href="tel:{{ host.phone }}" class="btn btn-outline" style="flex: 1;">Call</a>{% endif %}
+                    {% if host.email %}<a href="mailto:{{ host.email }}" class="btn btn-primary" style="flex: 1;">Email</a>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

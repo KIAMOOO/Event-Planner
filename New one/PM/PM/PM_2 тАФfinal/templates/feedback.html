@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Share Your Feedback - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="feedback-page">
+        <div class="feedback-header">
+            <h1>💬 Share Your Feedback</h1>
+            <p>Your opinion helps us improve our services and better serve the Kazakhstan event planning community.</p>
+        </div>
+
+        <div class="feedback-form-container">
+            <form action="{{ url_for('submit_feedback') }}" method="POST" class="feedback-form-page">
+                
+                <!-- Question 1: Overall Experience -->
+                <div class="question-section">
+                    <h3>1. How would you rate your overall experience with Toy Planner?</h3>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span class="rating-emoji">😍</span>
+                            <span class="rating-text">Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4" required>
+                            <span class="rating-emoji">😊</span>
+                            <span class="rating-text">Very Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3" required>
+                            <span class="rating-emoji">😐</span>
+                            <span class="rating-text">Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2" required>
+                            <span class="rating-emoji">😕</span>
+                            <span class="rating-text">Fair</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1" required>
+                            <span class="rating-emoji">😞</span>
+                            <span class="rating-text">Poor</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2: Service Type -->
+                <div class="question-section">
+                    <h3>2. What type of feedback would you like to share?</h3>
+                    <div class="feedback-type-options">
+                        <label class="feedback-type-option">
+                            <input type="radio" name="feedback_type" value="compliment" required>
+                            <span class="option-icon">👏</span>
+                            <span class="option-text">Compliment</span>
+                        </label>
+                        <label class="feedback-type-option">
+                            <input type="radio" name="feedback_type" value="suggestion" required>
+                            <span class="option-icon">💡</span>
+                            <span class="option-text">Suggestion</span>
+                        </label>
+                        <label class="feedback-type-option">
+                            <input type="radio" name="feedback_type" value="complaint" required>
+                            <span class="option-icon">😟</span>
+                            <span class="option-text">Complaint</span>
+                        </label>
+                        <label class="feedback-type-option">
+                            <input type="radio" name="feedback_type" value="general" required>
+                            <span class="option-icon">💬</span>
+                            <span class="option-text">General</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3: Recommendation -->
+                <div class="question-section">
+                    <h3>3. Would you recommend Toy Planner to friends and family?</h3>
+                    <div class="recommendation-options">
+                        <label class="recommendation-option">
+                            <input type="radio" name="recommendation" value="definitely" required>
+                            <span class="rec-text">Definitely! 🎉</span>
+                        </label>
+                        <label class="recommendation-option">
+                            <input type="radio" name="recommendation" value="probably" required>
+                            <span class="rec-text">Probably 👍</span>
+                        </label>
+                        <label class="recommendation-option">
+                            <input type="radio" name="recommendation" value="maybe" required>
+                            <span class="rec-text">Maybe 🤔</span>
+                        </label>
+                        <label class="recommendation-option">
+                            <input type="radio" name="recommendation" value="probably_not" required>
+                            <span class="rec-text">Probably not 👎</span>
+                        </label>
+                        <label class="recommendation-option">
+                            <input type="radio" name="recommendation" value="definitely_not" required>
+                            <span class="rec-text">Definitely not ❌</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Suggestion Form -->
+                <div class="suggestion-section">
+                    <h3>Tell us more about your experience</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-control" required placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="venue">Related Venue (Optional)</label>
+                        <input type="text" id="venue" name="venue" class="form-control" placeholder="If your feedback is about a specific venue">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" required 
+                                  placeholder="Please share your thoughts, suggestions, or describe your experience in detail..."></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline btn-large">Back to Home</a>
+                    <button type="submit" class="btn btn-primary btn-large">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.feedback-form-page');
+    const ratingOptions = document.querySelectorAll('input[name="rating"]');
+    const feedbackTypeOptions = document.querySelectorAll('input[name="feedback_type"]');
+    const recommendationOptions = document.querySelectorAll('input[name="recommendation"]');
+    
+    // Add visual feedback for radio button selections
+    function setupRadioGroup(radioButtons, containerClass) {
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove selected class from all options in this group
+                const allOptions = document.querySelectorAll(`input[name="${this.name}"]`);
+                allOptions.forEach(option => {
+                    const parent = option.closest('label');
+                    if (parent) {
+                        parent.style.borderColor = 'var(--primary-beige)';
+                        parent.style.background = 'rgba(255, 255, 255, 0.8)';
+                    }
+                });
+                
+                // Highlight selected option
+                const selectedParent = this.closest('label');
+                if (selectedParent) {
+                    selectedParent.style.borderColor = 'var(--accent-burgundy)';
+                    selectedParent.style.background = 'rgba(139, 38, 53, 0.1)';
+                }
+            });
+        });
+    }
+    
+    setupRadioGroup(ratingOptions);
+    setupRadioGroup(feedbackTypeOptions);
+    setupRadioGroup(recommendationOptions);
+    
+    // Form submission with validation
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Check if all required fields are filled
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const feedbackType = document.querySelector('input[name="feedback_type"]:checked');
+        const recommendation = document.querySelector('input[name="recommendation"]:checked');
+        
+        if (!name) {
+            alert('Please enter your name.');
+            document.getElementById('name').focus();
+            return;
+        }
+        
+        if (!email) {
+            alert('Please enter your email address.');
+            document.getElementById('email').focus();
+            return;
+        }
+        
+        if (!rating) {
+            alert('Please rate your overall experience.');
+            return;
+        }
+        
+        if (!feedbackType) {
+            alert('Please select the type of feedback.');
+            return;
+        }
+        
+        if (!recommendation) {
+            alert('Please let us know if you would recommend us.');
+            return;
+        }
+        
+        if (!message) {
+            alert('Please write your feedback message.');
+            document.getElementById('message').focus();
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> Submitting...';
+        submitBtn.disabled = true;
+        
+        // Submit the form
+        this.submit();
+    });
+    
+    console.log('Feedback page initialized successfully!');
+});
+</script>
+{% endblock %}
