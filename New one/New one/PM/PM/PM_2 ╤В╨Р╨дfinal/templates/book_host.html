@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Host to Booking - {{ host.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('hosts') }}" class="btn btn-outline">← Back to Hosts</a>
+    <div class="venue-detail" style="margin-top: 1rem;">
+        <div class="venue-header">
+            <div class="venue-content" style="width: 100%;">
+                <h1 class="venue-title">Add Host: {{ host.name }}</h1>
+                <p style="margin-top: .5rem; color: var(--text-light);">Enter the same email you used when booking your venue. We'll attach this host to that booking and update the total.</p>
+                <form method="POST" class="filter-form" style="margin-top: 1rem;">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.client_name.label(class="form-label") }}
+                        {{ form.client_name(class="form-control", placeholder="Your full name") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client_email.label(class="form-label") }}
+                        {{ form.client_email(class="form-control", placeholder="you@example.com") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client_phone.label(class="form-label") }}
+                        {{ form.client_phone(class="form-control", placeholder="+7 ...") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
