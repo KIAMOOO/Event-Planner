@@ -22,7 +22,7 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Create upload directory if it does not exist
+#Create upload directory if it does not exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Models of User
@@ -142,7 +142,7 @@ class InvitedGuest(db.Model):
     responded_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Forms
+# Forms of Venue
 class VenueFilterForm(FlaskForm):
     event_type = SelectField('Event Type', choices=[
         ('', 'All Events'),
@@ -1310,5 +1310,6 @@ def rsvp_confirmation(token):
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
+
 
 
