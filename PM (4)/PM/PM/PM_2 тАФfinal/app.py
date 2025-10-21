@@ -12,6 +12,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import tempfile
 
+# Initializes the Flask app and sets up security, database, and file upload configurations
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toy_planner.db'
@@ -1105,3 +1106,4 @@ def add_sample_data():
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
+
