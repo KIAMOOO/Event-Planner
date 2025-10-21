@@ -1,0 +1,1243 @@
+{% extends "base.html" %}
+
+{% block title %}{{ invitation.title }} - Invitation Preview{% endblock %}
+
+{% block content %}
+<!-- Animated Background -->
+<div class="preview-bg-wrapper">
+    <div class="particles-animated"></div>
+    <div class="gradient-layer"></div>
+</div>
+
+<div class="container my-5 position-relative" style="z-index: 10;">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Success Banner -->
+            <div class="success-banner animate-bounce-in">
+                <div class="success-icon-big">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="success-title">Invitation Created Successfully!</h2>
+                <p class="success-subtitle">Share the link below with your guests</p>
+            </div>
+
+            <!-- Share Link Card with Glow Effect -->
+            <div class="share-card glassmorphism-card animate-slide-up mb-4" style="animation-delay: 0.1s;">
+                <div class="card-glow-effect"></div>
+                <div class="card-content-glass">
+                    <h5 class="share-title">
+                        <i class="fas fa-share-alt gradient-icon-animated"></i>
+                        Share This Invitation
+                    </h5>
+                    <div class="link-container">
+                        <input type="text" class="link-input" id="invitationLink" value="{{ invitation_link }}" readonly>
+                        <button class="copy-btn" type="button" onclick="copyLink()">
+                            <i class="fas fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                    <div class="share-buttons mt-4">
+                        <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button class="share-btn email" onclick="shareEmail()">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </button>
+                        <button class="share-btn telegram" onclick="shareTelegram()">
+                            <i class="fab fa-telegram"></i>
+                            <span>Telegram</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RSVP Statistics with Animation -->
+            <div class="stats-grid mb-4">
+                <div class="stat-card-modern stat-primary animate-scale-in" style="animation-delay: 0.2s;">
+                    <div class="stat-icon-circle">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">{{ total_invited }}</div>
+                    <div class="stat-label">Total Invited</div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card-modern stat-success animate-scale-in" style="animation-delay: 0.3s;">
+                    <div class="stat-icon-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-number">{{ attending }}</div>
+                    <div class="stat-label">Attending</div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card-modern stat-danger animate-scale-in" style="animation-delay: 0.4s;">
+                    <div class="stat-icon-circle">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="stat-number">{{ not_attending }}</div>
+                    <div class="stat-label">Not Attending</div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card-modern stat-warning animate-scale-in" style="animation-delay: 0.5s;">
+                    <div class="stat-icon-circle">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="stat-number">{{ pending }}</div>
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+
+            <!-- Beautiful Invitation Preview -->
+            <div class="invitation-preview-card animate-slide-up" style="animation-delay: 0.6s;">
+                <div class="invitation-header-gradient">
+                    <div class="pattern-overlay"></div>
+                    <div class="header-content-center">
+                        <div class="invitation-icon-float">
+                            <i class="fas fa-envelope-open"></i>
+                        </div>
+                        <h1 class="invitation-title-main">{{ invitation.title }}</h1>
+                        <p class="invitation-subtitle">You're Invited!</p>
+                    </div>
+                </div>
+
+                <div class="invitation-body">
+                    <!-- Welcome Message -->
+                    <div class="message-section">
+                        <div class="quote-icon-left"><i class="fas fa-quote-left"></i></div>
+                        <p class="welcome-text">{{ invitation.message }}</p>
+                        <div class="quote-icon-right"><i class="fas fa-quote-right"></i></div>
+                    </div>
+
+                    <div class="divider-fancy"></div>
+
+                    <!-- Event Details Grid -->
+                    <div class="details-grid">
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">📅</div>
+                            <div class="detail-text">
+                                <strong>Date</strong>
+                                <span>{{ booking.event_date.strftime('%A, %B %d, %Y') }}</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">⏰</div>
+                            <div class="detail-text">
+                                <strong>Time</strong>
+                                <span>{{ invitation.event_time }}</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">📍</div>
+                            <div class="detail-text">
+                                <strong>Venue</strong>
+                                <span>{{ venue.name }}</span>
+                                <small>{{ venue.address }}</small>
+                            </div>
+                        </div>
+
+                        {% if hall %}
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">🏛️</div>
+                            <div class="detail-text">
+                                <strong>Hall</strong>
+                                <span>{{ hall.name }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">🎭</div>
+                            <div class="detail-text">
+                                <strong>Event Type</strong>
+                                <span>{{ booking.event_type.replace('_', ' ').title() }}</span>
+                            </div>
+                        </div>
+
+                        {% if invitation.dress_code %}
+                        <div class="detail-card-fancy">
+                            <div class="detail-icon-fancy">👔</div>
+                            <div class="detail-text">
+                                <strong>Dress Code</strong>
+                                <span>{{ invitation.dress_code }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if invitation.additional_info %}
+                    <div class="divider-fancy"></div>
+                    <div class="additional-info-section">
+                        <h5 class="info-title-fancy">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Additional Information
+                        </h5>
+                        <p class="info-text">{{ invitation.additional_info }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="divider-fancy"></div>
+
+                    <!-- Venue Contact -->
+                    <div class="contact-section">
+                        <h5 class="contact-title">
+                            <i class="fas fa-phone-alt me-2"></i>
+                            Venue Contact
+                        </h5>
+                        <div class="contact-grid">
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ venue.phone }}</span>
+                            </div>
+                            {% if venue.email %}
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ venue.email }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- RSVP Button -->
+                    <div class="text-center mt-5">
+                        <a href="{{ url_for('guest_rsvp_page', token=invitation.unique_token) }}" class="btn-rsvp-fancy">
+                            <span class="btn-icon"><i class="fas fa-check-circle"></i></span>
+                            <span class="btn-text">RSVP Now</span>
+                            <span class="btn-shine"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guest List Table -->
+            {% if guests %}
+            <div class="guest-list-card glassmorphism-card animate-slide-up mt-4" style="animation-delay: 0.7s;">
+                <div class="card-content-glass">
+                    <h5 class="section-title-fancy">
+                        <i class="fas fa-list-ul gradient-icon-animated me-2"></i>
+                        Guest List
+                        <span class="guest-count-badge">{{ total_attending }} attending</span>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-user me-2"></i>Name</th>
+                                    <th><i class="fas fa-phone me-2"></i>Phone</th>
+                                    <th><i class="fas fa-flag me-2"></i>Status</th>
+                                    <th><i class="fas fa-user-plus me-2"></i>Plus Ones</th>
+                                    <th><i class="fas fa-utensils me-2"></i>Dietary</th>
+                                    <th><i class="fas fa-clock me-2"></i>Responded</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for guest in guests %}
+                                <tr class="table-row-animated">
+                                    <td class="guest-name">
+                                        <i class="fas fa-user-circle me-2 text-primary"></i>
+                                        {{ guest.name }}
+                                    </td>
+                                    <td class="guest-phone">
+                                        {% if guest.phone %}
+                                            <i class="fas fa-phone me-1 text-success"></i>
+                                            {{ guest.phone }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if guest.rsvp_status == 'attending' %}
+                                            <span class="badge-status badge-success">
+                                                <i class="fas fa-check"></i> Attending
+                                            </span>
+                                        {% elif guest.rsvp_status == 'not_attending' %}
+                                            <span class="badge-status badge-danger">
+                                                <i class="fas fa-times"></i> Not Attending
+                                            </span>
+                                        {% else %}
+                                            <span class="badge-status badge-warning">
+                                                <i class="fas fa-hourglass-half"></i> Pending
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="plus-ones">
+                                        {% if guest.plus_one > 0 %}
+                                            <span class="plus-badge">+{{ guest.plus_one }}</span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="dietary-info">
+                                        {% if guest.dietary_restrictions %}
+                                            <span class="dietary-badge" title="{{ guest.dietary_restrictions }}">
+                                                <i class="fas fa-leaf"></i>
+                                                {{ guest.dietary_restrictions[:20] }}{% if guest.dietary_restrictions|length > 20 %}...{% endif %}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="responded-date">
+                                        {% if guest.responded_at %}
+                                            <i class="fas fa-calendar-check me-1 text-info"></i>
+                                            {{ guest.responded_at.strftime('%b %d') }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-fancy mt-5 animate-fade-in" style="animation-delay: 0.8s;">
+                <a href="{{ url_for('create_invitation', booking_id=booking.id) }}" class="action-btn-modern edit">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit Invitation</span>
+                </a>
+                <a href="{{ url_for('user_profile', user_id=booking.user_id) }}" class="action-btn-modern back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Background */
+.preview-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.particles-animated {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: particlesFloat 30s linear infinite;
+}
+
+.gradient-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+}
+
+@keyframes particlesFloat {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Success Banner */
+.success-banner {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 45px rgba(16, 185, 129, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.success-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.success-icon-big {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    position: relative;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.success-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.success-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    margin: 0;
+    position: relative;
+}
+
+/* Glassmorphism Card */
+.glassmorphism-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.glassmorphism-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+}
+
+.card-glow-effect {
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 60%);
+    animation: glowMove 8s ease-in-out infinite;
+}
+
+@keyframes glowMove {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 30px); }
+}
+
+.card-content-glass {
+    position: relative;
+    z-index: 2;
+}
+
+/* Share Card */
+.share-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gradient-icon-animated {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.8rem;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.link-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.link-input {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    background: white;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.copy-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.copy-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+}
+
+.copy-btn.copied {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Share Buttons */
+.share-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+}
+
+.share-btn.whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: white;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+.share-btn.email {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.share-btn.telegram {
+    background: linear-gradient(135deg, #0088cc 0%, #0066a6 100%);
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 136, 204, 0.3);
+}
+
+.share-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card-modern {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.stat-card-modern:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.stat-card-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+}
+
+.stat-primary::before {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-success::before {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+.stat-danger::before {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+}
+
+.stat-warning::before {
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+}
+
+.stat-icon-circle {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    position: relative;
+}
+
+.stat-primary .stat-icon-circle {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-success .stat-icon-circle {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.stat-danger .stat-icon-circle {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.stat-warning .stat-icon-circle {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+    animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Invitation Preview Card */
+.invitation-preview-card {
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.invitation-header-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 80px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 2px, transparent 2px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+}
+
+.header-content-center {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.invitation-icon-float {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.invitation-title-main {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+}
+
+.invitation-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 300;
+    letter-spacing: 3px;
+}
+
+.invitation-body {
+    padding: 50px 40px;
+}
+
+/* Message Section */
+.message-section {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.quote-icon-left, .quote-icon-right {
+    position: absolute;
+    font-size: 3rem;
+    color: rgba(102, 126, 234, 0.2);
+}
+
+.quote-icon-left {
+    top: 20px;
+    left: 20px;
+}
+
+.quote-icon-right {
+    bottom: 20px;
+    right: 20px;
+}
+
+.welcome-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #4a5568;
+    font-style: italic;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Fancy Divider */
+.divider-fancy {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+    margin: 40px 0;
+    position: relative;
+}
+
+.divider-fancy::before {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 0 15px;
+    color: #667eea;
+    font-size: 1.5rem;
+}
+
+/* Details Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.detail-card-fancy {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    padding: 25px;
+    border-radius: 18px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.detail-card-fancy:hover {
+    transform: translateX(8px);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.detail-icon-fancy {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.detail-text strong {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.detail-text span {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.detail-text small {
+    display: block;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+/* RSVP Button */
+.btn-rsvp-fancy {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.btn-rsvp-fancy:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+    color: white;
+}
+
+.btn-icon {
+    font-size: 1.8rem;
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    20%, 100% { left: 100%; }
+}
+
+/* Guest List */
+.section-title-fancy {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.guest-count-badge {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.table-modern {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-modern thead tr {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.table-modern thead th {
+    padding: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    border: none;
+}
+
+.table-modern thead th:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.table-modern thead th:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+.table-row-animated {
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.table-row-animated:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.table-row-animated td {
+    padding: 18px 15px;
+    border: none;
+    font-size: 0.95rem;
+}
+
+.table-row-animated td:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.table-row-animated td:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+.guest-name {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.guest-phone {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+}
+
+.badge-danger {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+}
+
+.badge-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+}
+
+.plus-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.dietary-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.dietary-info {
+    max-width: 150px;
+}
+
+/* Action Buttons */
+.action-buttons-fancy {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-btn-modern {
+    padding: 15px 35px;
+    border-radius: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+}
+
+.action-btn-modern.edit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.action-btn-modern.edit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.action-btn-modern.back {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn-modern.back:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Animations */
+.animate-bounce-in {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.5s ease backwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-slide-up {
+    animation: slideUpSmooth 0.6s ease backwards;
+}
+
+@keyframes slideUpSmooth {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contact Section */
+.contact-section {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe4a3 100%);
+    padding: 25px;
+    border-radius: 20px;
+    border-left: 5px solid #f59e0b;
+}
+
+.contact-title {
+    color: #92400e;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.contact-item i {
+    color: #f59e0b;
+    font-size: 1.2rem;
+}
+
+/* Additional Info */
+.additional-info-section {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    padding: 25px;
+    border-radius: 20px;
+    border-left: 5px solid #667eea;
+}
+
+.info-title-fancy {
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.info-text {
+    color: #4c51bf;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .invitation-title-main {
+        font-size: 2.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .link-container {
+        flex-direction: column;
+    }
+    
+    .share-buttons {
+        flex-direction: column;
+    }
+    
+    .share-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+function copyLink() {
+    const linkInput = document.getElementById('invitationLink');
+    linkInput.select();
+    linkInput.setSelectionRange(0, 99999);
+    
+    navigator.clipboard.writeText(linkInput.value).then(() => {
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+function shareWhatsApp() {
+    const link = document.getElementById('invitationLink').value;
+    const text = `You're invited to {{ invitation.title }}! Please RSVP: ${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function shareEmail() {
+    const link = document.getElementById('invitationLink').value;
+    const subject = `Invitation: {{ invitation.title }}`;
+    const body = `You're invited!\n\n{{ invitation.title }}\n\nPlease RSVP at: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function shareTelegram() {
+    const link = document.getElementById('invitationLink').value;
+    const text = `You're invited to {{ invitation.title }}! RSVP: ${link}`;
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`, '_blank');
+}
+</script>
+{% endblock %}

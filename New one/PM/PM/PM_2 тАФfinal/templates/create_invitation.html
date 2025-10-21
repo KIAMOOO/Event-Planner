@@ -1,0 +1,697 @@
+{% extends "base.html" %}
+
+{% block title %}Create Invitation - Toy Planner{% endblock %}
+
+{% block content %}
+<!-- Animated Background -->
+<div class="invitation-bg-wrapper">
+    <div class="particles-bg"></div>
+    <div class="gradient-overlay-bg"></div>
+</div>
+
+<div class="container my-5 position-relative" style="z-index: 10;">
+    <div class="row">
+        <div class="col-lg-9 mx-auto">
+            <!-- Beautiful Header -->
+            <div class="text-center mb-5 animate-fade-in-down">
+                <div class="header-icon-circle">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h1 class="display-3 fw-bold gradient-text-animated mb-3">
+                    Create Event Invitation
+                </h1>
+                <p class="lead text-muted mb-4">Design a beautiful invitation for your guests</p>
+                <div class="header-line"></div>
+            </div>
+
+            <!-- Event Details Card -->
+            <div class="beautiful-card mb-4 animate-slide-up" style="animation-delay: 0.1s;">
+                <div class="gradient-border-animated"></div>
+                <div class="card-glow"></div>
+                <div class="card-content-modern">
+                    <h5 class="section-title-modern">
+                        <i class="fas fa-calendar-check gradient-icon"></i>
+                        Event Details
+                    </h5>
+                    <div class="row g-4 mt-3">
+                        <div class="col-md-6">
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Venue</small>
+                                    <div class="detail-value-modern">{{ booking.venue.name }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Date</small>
+                                    <div class="detail-value-modern">{{ booking.event_date.strftime('%B %d, %Y') }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Event Type</small>
+                                    <div class="detail-value-modern">{{ booking.event_type.replace('_', ' ').title() }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Location</small>
+                                    <div class="detail-value-modern">{{ booking.venue.address }}</div>
+                                </div>
+                            </div>
+                            {% if booking.selected_hall %}
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-door-open"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Hall</small>
+                                    <div class="detail-value-modern">{{ booking.selected_hall.name }}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="detail-item-modern">
+                                <div class="detail-icon-modern">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="detail-content-modern">
+                                    <small class="detail-label-modern">Expected Guests</small>
+                                    <div class="detail-value-modern">{{ booking.guest_count }} people</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beautiful Form Card -->
+            <div class="beautiful-card animate-slide-up" style="animation-delay: 0.2s;">
+                <div class="gradient-border-animated"></div>
+                <div class="card-glow"></div>
+                <div class="card-content-modern">
+                    <form method="POST" action="{{ url_for('create_invitation', booking_id=booking.id) }}" id="beautyForm">
+                        {{ form.hidden_tag() }}
+
+                        <!-- Event Title -->
+                        <div class="mb-5">
+                            <label class="label-modern">
+                                <i class="fas fa-crown label-icon"></i>
+                                Event Title <span class="required-star">*</span>
+                            </label>
+                            {{ form.title(class="input-modern input-lg", placeholder="Wedding of Adil & Aisha") }}
+                            {% if form.title.errors %}
+                                <div class="error-msg">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.title.errors[0] }}
+                                </div>
+                            {% endif %}
+                            <div class="input-hint">
+                                <i class="fas fa-lightbulb"></i>
+                                e.g., "Wedding Celebration", "Tusau Keser for Baby", "Birthday Party"
+                            </div>
+                        </div>
+
+                        <!-- Welcome Message -->
+                        <div class="mb-5">
+                            <label class="label-modern">
+                                <i class="fas fa-heart label-icon"></i>
+                                Welcome Message <span class="required-star">*</span>
+                            </label>
+                            {{ form.message(class="input-modern textarea-modern", placeholder="Write a warm, personal message...", rows="5") }}
+                            {% if form.message.errors %}
+                                <div class="error-msg">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.message.errors[0] }}
+                                </div>
+                            {% endif %}
+                            <div class="input-hint">
+                                <i class="fas fa-lightbulb"></i>
+                                Welcome your guests with a heartfelt message
+                            </div>
+                        </div>
+
+                        <!-- Event Time -->
+                        <div class="mb-5">
+                            <label class="label-modern">
+                                <i class="fas fa-clock label-icon"></i>
+                                Event Time <span class="required-star">*</span>
+                            </label>
+                            {{ form.event_time(class="input-modern", placeholder="18:00 or 6:00 PM") }}
+                            {% if form.event_time.errors %}
+                                <div class="error-msg">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.event_time.errors[0] }}
+                                </div>
+                            {% endif %}
+                            <div class="input-hint">
+                                <i class="fas fa-lightbulb"></i>
+                                e.g., "18:00" or "6:00 PM - Reception at 7:00 PM"
+                            </div>
+                        </div>
+
+                        <!-- Dress Code -->
+                        <div class="mb-5">
+                            <label class="label-modern">
+                                <i class="fas fa-tshirt label-icon"></i>
+                                Dress Code <span class="optional-text">(Optional)</span>
+                            </label>
+                            {{ form.dress_code(class="input-modern", placeholder="Formal attire, Casual elegant...") }}
+                            <div class="input-hint">
+                                <i class="fas fa-lightbulb"></i>
+                                e.g., "Formal attire", "Casual elegant", "Traditional Kazakh dress"
+                            </div>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="mb-5">
+                            <label class="label-modern">
+                                <i class="fas fa-info-circle label-icon"></i>
+                                Additional Information <span class="optional-text">(Optional)</span>
+                            </label>
+                            {{ form.additional_info(class="input-modern textarea-modern", placeholder="Parking info, gift registry, special notes...", rows="4") }}
+                            <div class="input-hint">
+                                <i class="fas fa-lightbulb"></i>
+                                Parking instructions, gift registry, special notes, etc.
+                            </div>
+                        </div>
+
+                        <!-- Info Alert -->
+                        <div class="info-alert mb-5">
+                            <div class="alert-icon">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <div class="alert-content">
+                                <strong>What happens next?</strong>
+                                <p class="mb-0">After creating the invitation, you'll receive a unique link to share with your guests. They can RSVP directly and see full venue information!</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                {{ form.submit(class="btn-gradient-modern w-100") }}
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{ url_for('user_profile', user_id=booking.user_id) }}" class="btn-outline-modern w-100">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modern Beautiful Styles */
+:root {
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --shadow-glow: 0 8px 32px rgba(102, 126, 234, 0.2);
+    --shadow-hover: 0 15px 45px rgba(102, 126, 234, 0.3);
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* Animated Background */
+.invitation-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particles-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(102, 126, 234, 0.03) 0%, transparent 50%);
+    animation: particlesMove 20s ease-in-out infinite;
+}
+
+.gradient-overlay-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+}
+
+@keyframes particlesMove {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Header Styles */
+.header-icon-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.gradient-text-animated {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+}
+
+.header-line {
+    width: 100px;
+    height: 4px;
+    background: var(--gradient-primary);
+    margin: 0 auto;
+    border-radius: 2px;
+    animation: expandLine 1s ease-out;
+}
+
+@keyframes expandLine {
+    from { width: 0; }
+    to { width: 100px; }
+}
+
+/* Beautiful Card */
+.beautiful-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.beautiful-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.gradient-border-animated {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    animation: borderPulse 2s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.beautiful-card:hover .card-glow {
+    opacity: 1;
+}
+
+.card-content-modern {
+    position: relative;
+    z-index: 2;
+}
+
+/* Section Title */
+.section-title-modern {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gradient-icon {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.8rem;
+}
+
+/* Detail Items */
+.detail-item-modern {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-radius: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.detail-item-modern:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    transform: translateX(5px);
+}
+
+.detail-icon-modern {
+    width: 45px;
+    height: 45px;
+    background: var(--gradient-primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.detail-label-modern {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #718096;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.detail-value-modern {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Form Styles */
+.label-modern {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label-icon {
+    color: #667eea;
+    font-size: 1.1rem;
+}
+
+.required-star {
+    color: #f56565;
+    font-size: 1.2rem;
+}
+
+.optional-text {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    font-weight: 400;
+}
+
+.input-modern {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    background: white;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.input-modern:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.input-lg {
+    font-size: 1.2rem;
+    padding: 18px 24px;
+    font-weight: 500;
+}
+
+.textarea-modern {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.input-hint {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.input-hint i {
+    color: #fbbf24;
+}
+
+.error-msg {
+    color: #f56565;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Info Alert */
+.info-alert {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+    border-left: 4px solid #667eea;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    animation: slideInLeft 0.5s ease;
+}
+
+.alert-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.alert-content strong {
+    color: #667eea;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.alert-content p {
+    color: #4c51bf;
+    font-size: 0.95rem;
+}
+
+/* Buttons */
+.btn-gradient-modern {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-gradient-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+}
+
+.btn-gradient-modern:active {
+    transform: translateY(-1px);
+}
+
+.btn-outline-modern {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #667eea;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-outline-modern:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Animations */
+.animate-fade-in-down {
+    animation: fadeInDown 0.8s ease;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.6s ease backwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .beautiful-card {
+        padding: 25px;
+    }
+    
+    .header-icon-circle {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
+    
+    .section-title-modern {
+        font-size: 1.3rem;
+    }
+}
+</style>
+
+<script>
+// Add smooth scroll behavior
+document.getElementById('beautyForm')?.addEventListener('submit', function(e) {
+    const inputs = this.querySelectorAll('.input-modern');
+    inputs.forEach(input => {
+        if (input.value) {
+            input.classList.add('filled');
+        }
+    });
+});
+
+// Add floating label effect
+document.querySelectorAll('.input-modern').forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+    });
+    
+    input.addEventListener('blur', function() {
+        if (!this.value) {
+            this.parentElement.classList.remove('focused');
+        }
+    });
+});
+</script>
+{% endblock %}
+
