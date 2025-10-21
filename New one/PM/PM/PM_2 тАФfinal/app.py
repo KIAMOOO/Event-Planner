@@ -22,10 +22,10 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Create upload directory if it doesn't exist
+# Create upload directory if it does not exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Models
+# Models of User
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -1310,3 +1310,4 @@ def rsvp_confirmation(token):
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
+
