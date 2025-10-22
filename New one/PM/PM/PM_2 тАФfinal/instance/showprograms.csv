@@ -1,0 +1,7 @@
+id,name,genre,city,description,price_per_event,price_per_hour,image_url,email,phone,availability
+1,Fire Show,Performance,Almaty,Spectacular pyrotechnic performance for ceremonies and parties,200000,,images/fire.jpg,fireshow@example.com,+7 700 000 0001,Weekends & evenings
+2,LED Light Dance,Cinematic Dance,Almaty,Choreographed LED dance troupe performance,150000,,images/led.jpg,leddance@example.com,+7 700 000 0002,Evenings
+3,Magician,Magic Show,Almaty,Close-up and stage magic for all ages,120000,30000,images/magic.jpg,magic@example.com,+7 700 000 0003,Flexible
+4,Traditional Dombra Ensemble,Traditional Music,Almaty,Authentic Kazakh music with dombra ensemble,100000,,images/dombyra.jpg,dombra@example.com,+7 700 000 0004,Afternoons & evenings
+5,Acrobatics Show,Circus,Almaty,High-energy acrobatic performance for large events,180000,,images/dance.jpg,acro@example.com,+7 700 000 0005,Weekends
+

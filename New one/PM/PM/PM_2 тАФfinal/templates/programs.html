@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Show Programs - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Entertainment Show Programs</h1>
+
+    <div class="filter-section">
+        <h3>Filter Programs</h3>
+        <form method="GET" class="filter-form">
+            <div class="form-group">
+                {{ form.genre.label(class="form-label") }}
+                {{ form.genre(class="form-control", placeholder="e.g., Show, Dance, Circus", value=request.args.get('genre', '')) }}
+            </div>
+            <div class="form-group">
+                {{ form.city.label(class="form-label") }}
+                {{ form.city(class="form-control", placeholder="e.g., Almaty", value=request.args.get('city', '')) }}
+            </div>
+            <div class="form-group">
+                {{ form.max_price.label(class="form-label") }}
+                {{ form.max_price(class="form-control", placeholder="e.g., 200000", value=request.args.get('max_price', '')) }}
+            </div>
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('show_programs') }}" class="btn btn-outline">Show All</a>
+            </div>
+        </form>
+    </div>
+
+    {% if programs and programs|length > 0 %}
+        <div class="venues-grid">
+            {% for item in programs %}
+                <div class="venue-card">
+                    <div class="venue-image">
+                        {% if item.image_url %}
+                            <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                        {% else %}
+                            🎭
+                        {% endif %}
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-title">{{ item.name }}</h3>
+                        {% if item.genre %}<p>{{ item.genre }}</p>{% endif %}
+                        {% if item.description %}
+                            <p>{{ item.description }}</p>
+                        {% endif %}
+                        <div class="venue-price">
+                            {% if item.price_per_event %}
+                                {{ "{:,.0f}".format(item.price_per_event|int) }} KZT per event
+                            {% elif item.price_per_hour %}
+                                {{ "{:,.0f}".format(item.price_per_hour|int) }} KZT per hour
+                            {% else %}
+                                Contact for pricing
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <a href="{{ url_for('show_program_detail', id=item.id) }}" class="btn btn-outline" style="flex: 1;">View Details</a>
+                            <a href="{{ url_for('book_showprogram', id=item.id) }}" class="btn btn-primary" style="flex: 1;">Add to Booking</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center" style="margin: 3rem 0;">
+            <p>No programs found. Please add data to <code>instance/programs.csv</code>.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

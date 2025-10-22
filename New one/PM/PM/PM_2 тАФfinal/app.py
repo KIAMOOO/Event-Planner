@@ -195,6 +195,12 @@ class MusicianFilterForm(FlaskForm):
     max_price = IntegerField('Max Price (KZT)', validators=[NumberRange(min=0, max=10000000)])
     submit = SubmitField('Search Musicians')
 
+class ProgramFilterForm(FlaskForm):
+    genre = StringField('Program Type')
+    city = StringField('City')
+    max_price = IntegerField('Max Price (KZT)', validators=[NumberRange(min=0, max=10000000)])
+    submit = SubmitField('Search Programs')
+
 class ProfileLookupForm(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email()], 
                        render_kw={'placeholder': 'Enter your email to view your bookings'})
@@ -917,6 +923,26 @@ def _find_latest_relevant_booking_by_email(email):
             .order_by(Booking.created_at.desc())
             .first())
 
+def _find_booking_by_identity(name, email, phone):
+    """Find the most relevant booking matching name, email, and phone.
+
+    Prefers upcoming bookings; falls back to latest any booking.
+    """
+    base_query = Booking.query.filter(
+        Booking.client_email == email,
+        Booking.client_phone == phone,
+        Booking.client_name == name
+    )
+    upcoming = (base_query
+                .filter(Booking.event_date >= date.today())
+                .order_by(Booking.event_date.asc(), Booking.created_at.desc())
+                .first())
+    if upcoming:
+        return upcoming
+    return (base_query
+            .order_by(Booking.created_at.desc())
+            .first())
+
 @app.route('/book_host/<id>', methods=['GET', 'POST'])
 def book_host(id):
     hosts = load_csv_records('hosts.csv')
@@ -988,6 +1014,91 @@ def book_musician(id):
         return redirect(url_for('user_profile', user_id=user.id))
 
     return render_template('book_musician.html', musician=artist, form=form)
+
+@app.route('/showprograms')
+def show_programs():
+    """Display list of entertainment programs from CSV with filters (similar to musicians)."""
+    form = ProgramFilterForm()
+    program_records = load_csv_records('showprograms.csv')
+    genre = request.args.get('genre', '').strip()
+    city = request.args.get('city', '').strip()
+    max_price = request.args.get('max_price', '').strip()
+
+    def parse_price(record):
+        for key in ['price_per_event', 'price_per_hour']:
+            value = record.get(key)
+            if value:
+                try:
+                    return int(value)
+                except Exception:
+                    continue
+        return None
+
+    filtered = []
+    for r in program_records:
+        if genre and genre.lower() not in (r.get('genre', '') or '').lower():
+            continue
+        if city and city.lower() not in (r.get('city', '') or '').lower():
+            continue
+        if max_price:
+            try:
+                mp = int(max_price)
+                price_val = parse_price(r)
+                if price_val is not None and price_val > mp:
+                    continue
+            except Exception:
+                pass
+        filtered.append(r)
+
+    return render_template('programs.html', programs=filtered, form=form)
+
+@app.route('/showprogram/<id>')
+def show_program_detail(id):
+    programs_data = load_csv_records('showprograms.csv')
+    program = next((p for p in programs_data if str(p.get('id')) == str(id)), None)
+    if not program:
+        return redirect(url_for('show_programs'))
+    return render_template('program_detail.html', program=program)
+
+@app.route('/book_showprogram/<id>', methods=['GET', 'POST'])
+def book_showprogram(id):
+    programs_data = load_csv_records('showprograms.csv')
+    program = next((p for p in programs_data if str(p.get('id')) == str(id)), None)
+    if not program:
+        flash('Selected program not found.', 'error')
+        return redirect(url_for('show_programs'))
+
+    form = AddOnForm()
+    if form.validate_on_submit():
+        user = find_or_create_user(
+            name=form.client_name.data,
+            email=form.client_email.data,
+            phone=form.client_phone.data
+        )
+
+        booking = _find_booking_by_identity(
+            name=form.client_name.data,
+            email=form.client_email.data,
+            phone=form.client_phone.data
+        )
+        if not booking:
+            flash('You should book the venue first.', 'info')
+            return redirect(url_for('venues'))
+
+        add_price = _parse_price_from_record(program) or 0
+        booking.user_id = user.id
+        booking.total_amount = (booking.total_amount or 0) + add_price
+        note_parts = []
+        if booking.special_requests:
+            note_parts.append(booking.special_requests)
+        note_parts.append(f"Added Program: {program.get('name', 'Program')} (+{add_price} KZT)")
+        booking.special_requests = '\n'.join([p for p in note_parts if p])
+        db.session.commit()
+
+        flash('Program has been added to your venue booking and total updated.', 'success')
+        return redirect(url_for('user_profile', user_id=user.id))
+
+    return render_template('book_program.html', program=program, form=form)
 
 # Initialize database
 def create_tables():

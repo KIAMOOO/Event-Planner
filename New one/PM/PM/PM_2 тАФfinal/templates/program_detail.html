@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Show Program Details - {{ program.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('show_programs') }}" class="btn btn-outline">← Back to Show Programs</a>
+    <div class="venue-detail" style="margin-top: 1rem;">
+        <div class="venue-header">
+            <div class="venue-content" style="width: 100%;">
+                <h1 class="venue-title">{{ program.name }}</h1>
+                <div class="venue-info" style="display: grid; gap: .5rem; margin-top: .5rem;">
+                    {% if program.email %}<div>✉️ Email: <a href="mailto:{% if program.email %}{{ program.email }}{% endif %}">{{ program.email }}</a></div>{% endif %}
+                    {% if program.phone %}<div>📞 Phone: <a href="tel:{% if program.phone %}{{ program.phone }}{% endif %}">{{ program.phone }}</a></div>{% endif %}
+                    {% if program.availability %}<div>🗓️ Availability: {{ program.availability }}</div>{% endif %}
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <a href="{{ url_for('book_showprogram', id=program.id) }}" class="btn btn-primary" style="flex: 1;">Add to Booking</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
