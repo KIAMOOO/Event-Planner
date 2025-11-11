@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="success-page">
+        <div class="success-content">
+            <div class="success-icon">🎉</div>
+            <h1>Thank You for Your Feedback!</h1>
+            <p>We've received your feedback and truly appreciate you taking the time to help us improve our services.</p>
+            
+            <div class="success-details">
+                <div class="success-item">
+                    <span class="success-emoji">✅</span>
+                    <span>Your feedback has been saved successfully</span>
+                </div>
+                <div class="success-item">
+                    <span class="success-emoji">📧</span>
+                    <span>We'll review your suggestions carefully</span>
+                </div>
+                <div class="success-item">
+                    <span class="success-emoji">🚀</span>
+                    <span>Your input helps us serve Kazakhstan better</span>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-large">Back to Home</a>
+                <a href="{{ url_for('venues') }}" class="btn btn-outline btn-large">Browse Venues</a>
+            </div>
+
+            <div class="success-message">
+                <p><strong>What happens next?</strong></p>
+                <p>Our team reviews all feedback within 2-3 business days. If you've allowed us to contact you, we may reach out for additional details or to follow up on your suggestions.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
