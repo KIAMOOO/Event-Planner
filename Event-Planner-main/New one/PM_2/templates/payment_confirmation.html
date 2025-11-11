@@ -1,0 +1,699 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Confirmation - Event Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+.payment-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.payment-header {
+    background: var(--gradient-accent);
+    color: white;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="security" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23security)"/></svg>');
+}
+
+.payment-header-content {
+    position: relative;
+    z-index: 1;
+}
+
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.booking-summary {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
+
+.summary-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-beige);
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.summary-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--primary-beige);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent-burgundy);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--accent-burgundy);
+}
+
+.summary-label {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.summary-value {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.payment-form {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-beige);
+}
+
+.form-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+}
+
+.card-input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.card-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--primary-beige);
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.card-input:focus {
+    outline: none;
+    border-color: var(--accent-burgundy);
+    box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
+}
+
+.card-icons {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.card-icon {
+    width: 30px;
+    height: 20px;
+    background: var(--primary-beige);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.expiry-cvv-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 120px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.security-features {
+    background: #F0F9FF;
+    border: 1px solid #0EA5E9;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.security-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: #0369A1;
+    margin-bottom: 1rem;
+}
+
+.security-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #0369A1;
+    font-size: 0.9rem;
+}
+
+.security-icon {
+    color: #0EA5E9;
+    font-size: 1rem;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--soft-sand);
+    border-radius: var(--border-radius);
+}
+
+.checkbox-input {
+    margin-top: 0.2rem;
+    transform: scale(1.2);
+}
+
+.terms-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-dark);
+}
+
+.payment-button {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--gradient-accent);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.payment-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139, 38, 53, 0.3);
+}
+
+.payment-button:hover::before {
+    left: 100%;
+}
+
+.fake-graphs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.graph-card {
+    background: white;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.graph-title {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.graph-visual {
+    height: 40px;
+    background: var(--gradient-accent);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.graph-visual::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.1) 2px,
+        rgba(255, 255, 255, 0.1) 4px
+    );
+}
+
+.graph-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-burgundy);
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.step.completed .step-number {
+    background: var(--accent-green);
+    color: white;
+}
+
+.step.active .step-number {
+    background: var(--accent-burgundy);
+    color: white;
+}
+
+.step.pending .step-number {
+    background: var(--primary-beige);
+    color: var(--text-light);
+}
+
+.step-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.step-arrow {
+    color: var(--text-light);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .payment-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .expiry-cvv-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .security-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .fake-graphs {
+        grid-template-columns: 1fr;
+    }
+    
+    .progress-steps {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    <!-- Payment Header -->
+    <div class="payment-header">
+        <div class="payment-header-content">
+            <div class="security-badge">
+                <span>🔒</span>
+                <span>Secure Payment Processing</span>
+            </div>
+            <h1>Complete Your Booking</h1>
+            <p>Secure payment for {{ venue.name }}</p>
+        </div>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+        <div class="step completed">
+            <div class="step-number">✓</div>
+            <div class="step-text">Event Details</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step active">
+            <div class="step-number">2</div>
+            <div class="step-text">Payment</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step pending">
+            <div class="step-number">3</div>
+            <div class="step-text">Confirmation</div>
+        </div>
+    </div>
+
+    <!-- Fake Security Graphs -->
+    <div class="fake-graphs">
+        <div class="graph-card">
+            <div class="graph-title">SSL Encryption</div>
+            <div class="graph-visual"></div>
+            <div class="graph-value">256-bit</div>
+        </div>
+        <div class="graph-card">
+            <div class="graph-title">Security Score</div>
+            <div class="graph-visual" style="background: var(--gradient-green);"></div>
+            <div class="graph-value">99.9%</div>
+        </div>
+        <div class="graph-card">
+            <div class="graph-title">Transaction Safety</div>
+            <div class="graph-visual" style="background: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%);"></div>
+            <div class="graph-value">Verified</div>
+        </div>
+    </div>
+
+    <div class="payment-grid">
+        <!-- Payment Form -->
+        <div class="payment-form">
+            <div class="form-header">
+                <div class="form-icon">💳</div>
+                <div>
+                    <div class="form-title">Payment Information</div>
+                    <p style="color: var(--text-light); margin: 0;">Enter your payment details securely</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <!-- Card Number -->
+                <div class="card-input-group">
+                    <label class="form-label" for="{{ form.card_number.id }}">Card Number</label>
+                    {{ form.card_number(class="card-input", id="cardNumber") }}
+                    <div class="card-icons">
+                        <div class="card-icon">VISA</div>
+                        <div class="card-icon">MC</div>
+                        <div class="card-icon">AMEX</div>
+                    </div>
+                    {% if form.card_number.errors %}
+                        <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                            {% for error in form.card_number.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Cardholder Name -->
+                <div class="form-group">
+                    <label class="form-label" for="{{ form.card_holder.id }}">Cardholder Name</label>
+                    {{ form.card_holder(class="card-input") }}
+                    {% if form.card_holder.errors %}
+                        <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                            {% for error in form.card_holder.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Expiry and CVV -->
+                <div class="expiry-cvv-group">
+                    <div>
+                        <label class="form-label" for="{{ form.expiry_month.id }}">Expiry Month</label>
+                        {{ form.expiry_month(class="card-input") }}
+                        {% if form.expiry_month.errors %}
+                            <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                                {% for error in form.expiry_month.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label" for="{{ form.expiry_year.id }}">Expiry Year</label>
+                        {{ form.expiry_year(class="card-input") }}
+                        {% if form.expiry_year.errors %}
+                            <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                                {% for error in form.expiry_year.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label" for="{{ form.cvv.id }}">CVV</label>
+                        {{ form.cvv(class="card-input") }}
+                        {% if form.cvv.errors %}
+                            <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                                {% for error in form.cvv.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="form-group">
+                    <label class="form-label" for="{{ form.billing_address.id }}">Billing Address</label>
+                    {{ form.billing_address(class="card-input", rows="3") }}
+                    {% if form.billing_address.errors %}
+                        <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                            {% for error in form.billing_address.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Security Features -->
+                <div class="security-features">
+                    <div class="security-title">
+                        <span>🛡️</span>
+                        <span>Your Payment is Protected</span>
+                    </div>
+                    <ul class="security-list">
+                        <li class="security-item">
+                            <span class="security-icon">🔒</span>
+                            <span>256-bit SSL Encryption</span>
+                        </li>
+                        <li class="security-item">
+                            <span class="security-icon">🏦</span>
+                            <span>Bank-level Security</span>
+                        </li>
+                        <li class="security-item">
+                            <span class="security-icon">🔐</span>
+                            <span>PCI DSS Compliant</span>
+                        </li>
+                        <li class="security-item">
+                            <span class="security-icon">✅</span>
+                            <span>Fraud Protection</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="terms-checkbox">
+                    {{ form.agree_terms(class="checkbox-input") }}
+                    <div class="terms-text">
+                        <strong>{{ form.agree_terms.label.text }}</strong><br>
+                        By proceeding, you agree to our Terms of Service and Privacy Policy. Your payment will be processed securely and a confirmation will be sent to your email.
+                    </div>
+                </div>
+                {% if form.agree_terms.errors %}
+                    <div style="color: var(--accent-burgundy); font-size: 0.9rem; margin-top: 0.5rem;">
+                        {% for error in form.agree_terms.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                {{ form.submit(class="payment-button") }}
+            </form>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+            <div class="summary-header">
+                <div class="summary-icon">📋</div>
+                <div class="summary-title">Booking Summary</div>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Venue</span>
+                <span class="summary-value">{{ venue.name }}</span>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Event Date</span>
+                <span class="summary-value">{{ booking_data.event_date }}</span>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Event Type</span>
+                <span class="summary-value">{{ booking_data.event_type.replace('_', ' ').title() }}</span>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Guests</span>
+                <span class="summary-value">{{ booking_data.guest_count }} people</span>
+            </div>
+
+            {% if selected_hall %}
+            <div class="summary-item">
+                <span class="summary-label">Hall</span>
+                <span class="summary-value">{{ selected_hall.name }}</span>
+            </div>
+            {% endif %}
+
+            <div class="summary-item">
+                <span class="summary-label">Price per Person</span>
+                <span class="summary-value">{{ "{:,}".format(venue.price_per_person) }} KZT</span>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Total Amount</span>
+                <span class="summary-value">{{ "{:,}".format(booking_data.total_amount or 0) }} KZT</span>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">Deposit Amount (30%)</span>
+                <span class="summary-value" style="color: var(--accent-burgundy); font-size: 1.3rem;">{{ "{:,}".format(((booking_data.total_amount or 0) * 0.3) | int) }} KZT</span>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #FEF3C7; border: 2px solid #F59E0B; border-radius: var(--border-radius); font-size: 0.9rem;">
+                <strong style="color: #B45309;">💡 Deposit Payment:</strong>
+                <p style="margin: 0.5rem 0 0 0; color: #78350F;">You're paying a 30% deposit ({{ "{:,}".format(((booking_data.total_amount or 0) * 0.3) | int) }} KZT) to secure your booking. The remaining 70% ({{ "{:,}".format(((booking_data.total_amount or 0) * 0.7) | int) }} KZT) is payable before your event date.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Format card number input
+    const cardNumberInput = document.getElementById('cardNumber');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue !== e.target.value) {
+                e.target.value = formattedValue;
+            }
+        });
+    }
+
+    // Add form validation feedback
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('.payment-button');
+            submitBtn.innerHTML = '🔄 Processing Payment...';
+            submitBtn.disabled = true;
+        });
+    }
+});
+</script>
+{% endblock %}
