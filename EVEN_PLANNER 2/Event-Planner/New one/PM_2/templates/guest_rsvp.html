@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}RSVP - {{ booking.venue.name }} - Toy Planner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="rsvp-container">
+        <div class="text-center mb-3">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">💌</div>
+            <h1>You're Invited!</h1>
+            <h2 style="color: var(--accent-burgundy);">{{ booking.client_name }}'s Celebration</h2>
+        </div>
+
+        <div style="background: var(--soft-sand); padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div class="text-center">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                    <strong>Date</strong>
+                    <p>{{ booking.event_date.strftime('%A, %B %d, %Y') if booking.event_date else 'Date To Be Determined' }}</p>
+                </div>
+                <div class="text-center">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
+                    <strong>Venue</strong>
+                    <p>{{ booking.venue.name if booking.venue else 'Venue TBD' }}</p>
+                    <small>{{ booking.venue.address if booking.venue else 'Address TBD' }}</small>
+                </div>
+                <div class="text-center">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎭</div>
+                    <strong>Event Type</strong>
+                    <p>
+                        {% if booking.event_type == 'wedding' %}Wedding (Үйлену тойы)
+                        {% elif booking.event_type == 'tusau_keser' %}Tusau Keser (Тұсау кесер)
+                        {% elif booking.event_type == 'corporate' %}Corporate Event
+                        {% elif booking.event_type == 'kudalyk' %}Kudalyk (Құдалық)
+                        {% else %}{{ booking.event_type.title() }}
+                        {% endif %}
+                    </p>
+                </div>
+                {% if booking.selected_hall %}
+                <div class="text-center">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏛️</div>
+                    <strong>Hall</strong>
+                    <p>{{ booking.selected_hall.name }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="rsvp-form">
+            <h3 class="text-center mb-2">Please Confirm Your Attendance</h3>
+            
+            <form id="rsvp-form">
+                <div class="form-group">
+                    <label for="guest-name">Your Full Name *</label>
+                    <input type="text" id="guest-name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="guest-email">Email Address</label>
+                    <input type="email" id="guest-email" class="form-control" placeholder="Optional - for event updates">
+                </div>
+
+                <div class="form-group">
+                    <label for="guest-phone">Phone Number</label>
+                    <input type="tel" id="guest-phone" class="form-control" placeholder="Optional - +7 777 123 4567">
+                </div>
+
+                <div class="form-group">
+                    <label>Will you be attending? *</label>
+                    <div class="rsvp-status">
+                        <div class="status-option" data-status="attending">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                            <strong>Yes, I'll be there!</strong>
+                            <p>Looking forward to celebrating</p>
+                        </div>
+                        <div class="status-option" data-status="not_attending">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">❌</div>
+                            <strong>Sorry, can't make it</strong>
+                            <p>Wish I could be there</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="additional-guests-section" style="display: none;">
+                    <label for="additional-guests">How many additional guests will you bring?</label>
+                    <select id="additional-guests" class="form-control">
+                        <option value="0">Just me</option>
+                        <option value="1">+1 guest</option>
+                        <option value="2">+2 guests</option>
+                        <option value="3">+3 guests</option>
+                        <option value="4">+4 guests</option>
+                        <option value="5">+5 guests</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dietary-requirements">Dietary Requirements or Special Needs</label>
+                    <textarea id="dietary-requirements" class="form-control" rows="3" placeholder="Halal, vegetarian, allergies, accessibility needs, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message for the Host (Optional)</label>
+                    <textarea id="message" class="form-control" rows="2" placeholder="Congratulations and best wishes..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                    Submit RSVP
+                </button>
+            </form>
+        </div>
+
+        <div id="rsvp-success" style="display: none; text-align: center; padding: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <h3>Thank you for your RSVP!</h3>
+            <p>Your response has been recorded. The host will be notified of your attendance status.</p>
+        </div>
+
+        {% if booking.event_type in ['wedding', 'tusau_keser', 'kudalyk'] %}
+        <div style="background: var(--white); padding: 2rem; border-radius: 15px; margin-top: 2rem; border: 2px solid var(--primary-beige);">
+            <h3>Traditional Ceremony Information</h3>
+            {% if booking.event_type == 'wedding' %}
+                <p><strong>Dress Code:</strong> Traditional or formal attire welcome. Consider wearing traditional Kazakh clothing to honor the culture.</p>
+                <p><strong>Gifts:</strong> Monetary gifts are traditional and appreciated. Cash gifts should be in odd amounts for good luck.</p>
+                <p><strong>Ceremony:</strong> The celebration will include traditional Kazakh wedding customs including betashar and other rituals.</p>
+            {% elif booking.event_type == 'tusau_keser' %}
+                <p><strong>Ceremony:</strong> This is a traditional celebration for a child's first steps. The ceremony involves cutting symbolic ropes.</p>
+                <p><strong>Gifts:</strong> Traditional gifts include jewelry, clothes, or money for the child's future.</p>
+                <p><strong>Participation:</strong> Guests may be invited to participate in the rope-cutting ceremony.</p>
+            {% elif booking.event_type == 'kudalyk' %}
+                <p><strong>Ceremony:</strong> This is a traditional matchmaking ceremony between families.</p>
+                <p><strong>Dress Code:</strong> Formal or traditional attire is appropriate.</p>
+                <p><strong>Gifts:</strong> Gifts for both families are traditional.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <p style="color: var(--text-light);">
+                Need to contact the host? Reach out to {{ booking.client_name }} at 
+                <a href="mailto:{{ booking.client_email }}" style="color: var(--accent-burgundy);">{{ booking.client_email }}</a>
+                {% if booking.client_phone %}
+                or <a href="tel:{{ booking.client_phone }}" style="color: var(--accent-burgundy);">{{ booking.client_phone }}</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusOptions = document.querySelectorAll('.status-option');
+    const additionalGuestsSection = document.getElementById('additional-guests-section');
+    const rsvpForm = document.getElementById('rsvp-form');
+    const rsvpSuccess = document.getElementById('rsvp-success');
+    let selectedStatus = null;
+
+    // Handle status selection
+    statusOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            statusOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedStatus = this.dataset.status;
+            
+            // Show additional guests section only if attending
+            if (selectedStatus === 'attending') {
+                additionalGuestsSection.style.display = 'block';
+            } else {
+                additionalGuestsSection.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle form submission
+    rsvpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!selectedStatus) {
+            alert('Please select your attendance status');
+            return;
+        }
+
+        const guestName = document.getElementById('guest-name').value;
+        if (!guestName.trim()) {
+            alert('Please enter your name');
+            return;
+        }
+
+        const rsvpData = {
+            booking_id: {{ booking.id }},
+            name: guestName,
+            email: document.getElementById('guest-email').value,
+            phone: document.getElementById('guest-phone').value,
+            status: selectedStatus,
+            additional_guests: selectedStatus === 'attending' ? document.getElementById('additional-guests').value : 0,
+            dietary_requirements: document.getElementById('dietary-requirements').value,
+            message: document.getElementById('message').value
+        };
+
+        // Submit RSVP
+        fetch('/api/rsvp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(rsvpData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                rsvpForm.style.display = 'none';
+                rsvpSuccess.style.display = 'block';
+            } else {
+                alert('Error submitting RSVP. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error submitting RSVP. Please try again.');
+        });
+    });
+});
+</script>
+{% endblock %}
