@@ -1,0 +1,10 @@
+name,description,experience_years,language,city,price_per_event,price_per_hour,phone,email,image_url,availability
+Tursynbek Kabatov,One of Kazakhstan’s most famous comedians and event hosts,15,Kazakh; Russian,Astana,800000,,+7 701 100 2000,kabatov@example.com,images/tur.webp,2025-10-05;2025-10-19;2025-10-26
+Nurlan Saburov,Internationally known stand-up comedian and charismatic MC,12,Russian,Moscow,1000000,,+7 701 200 3000,saburov@example.com,images/nur.jpg,2025-10-06;2025-10-20;2025-11-02
+Aldiyar Zhumazhan,Popular TV host and event presenter,10,Kazakh; Russian,Astana,500000,,+7 701 300 4000,aldiyar@example.com,images/ldi.webp,2025-10-07;2025-10-18;2025-11-03
+Dauren Aidarkulov,Famous TV presenter and event host,9,Kazakh; Russian,Almaty,400000,,+7 701 400 5000,dauren@example.com,images/dau.webp,2025-10-08;2025-10-22;2025-11-04
+Ruslan Krivenkov,Well-known showman and corporate MC,8,Kazakh; Russian,Shymkent,350000,,+7 701 500 6000,bekbolat@example.com,images/rusa.jpg,2025-10-09;2025-10-23;2025-11-05
+Azamat Musagaliev,Popular comedian and entertainer with live hosting skills,14,Russian,Moscow,900000,,+7 701 600 7000,azamat@example.com,images/aza.jpg,2025-10-10;2025-10-24;2025-11-06
+Kairat Adilgerei,TV host and professional presenter for cultural events,13,Kazakh; Russian,Almaty,450000,,+7 701 800 9000,saule@example.com,images/ka.jpg,2025-10-12;2025-10-26;2025-11-08
+Tahir Sultan,Wedding and corporate MC with dynamic style,16,Kazakh; Russian,Shymkent,600000,,+7 701 900 1000,erbolat@example.com,images/tah.webp,2025-10-13;2025-10-27;2025-11-09
+Dmitry Doronin,Renowned entertainer and tamada for large weddings,11,Russian,Astana,300000,,+7 701 700 8000,ruslan@example.com,images/ss.jpg,2025-10-11;2025-10-25;2025-11-07
