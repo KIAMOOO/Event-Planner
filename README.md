@@ -1,154 +1,117 @@
-# 🎭 Event Planner - Kazakhstan Event Planning Platform
+# Event Planner MVP
 
-A modern Flask-based event planning platform designed specifically for the Kazakhstan market, featuring traditional ceremonies like Tusau Keser, Kudalyk, and modern weddings with cultural authenticity.
+## Overview
 
-## ✨ Features
+Event Planner is a web application that helps people plan and organize events. Users can find and book venues, hosts, musicians, and show programs for their events. The platform also helps manage guest lists, RSVPs, and invitations.
 
-### 🏛️ Core MVP Features
-- **Event Type Selection**: Wedding (Үйлену тойы), Tusau Keser (Тұсау кесер), Corporate Events, Kudalyk (Құдалық)
-- **Venue Catalog**: Curated venues across Almaty districts with advanced filtering
-- **Smart Filtering**: Filter by district, guest capacity, price per person, and event type
-- **Venue Details**: Comprehensive venue information with halls, menus, and pricing
-- **Booking System**: Simple online booking with date selection and deposit tracking
-- **Guest Invitations**: Digital RSVP system with traditional ceremony information
+## Problem and Solution
 
-### 🇰🇿 Kazakhstan-Specific Features
-- **Cultural Integration**: Built-in support for Kazakh traditions and ceremonies
-- **Local Districts**: Covers all major Almaty districts (Bostandyk, Medeu, Almaly, etc.)
-- **Traditional Menus**: Includes Kazakh cuisine options (Beshbarmak, Baursak, etc.)
-- **Cultural Guidelines**: RSVP pages include traditional ceremony information
-- **Bilingual Support**: English interface with Kazakh cultural terms
+Planning an event is hard. People need to find venues, entertainment, and manage guests. This platform solves this by bringing everything together in one place. Users can search, compare, and book services easily.
 
-### 🎨 Design & UX
-- **Warm Color Scheme**: #DCC5B2 (beige) and #F0E4D3 (soft sand) with burgundy accents
-- **Premium Feel**: Elegant design perfect for weddings and corporate events
-- **Mobile Responsive**: Optimized for all device sizes
-- **Cultural Authenticity**: Design respects Kazakh cultural values
+## Target Users
 
-## 🚀 Quick Start
+- People planning weddings, birthdays, or corporate events
+- Event organizers
+- Anyone who needs to book event services
 
-### Prerequisites
+## Tech Stack
+
+- **Backend**: Flask (Python)
+- **Database**: SQLite (with SQLAlchemy ORM)
+- **Frontend**: HTML, CSS, JavaScript, Jinja2 templates
+- **Forms**: Flask-WTF, WTForms
+- **Other**: OpenPyXL (Excel exports), Werkzeug (password hashing)
+
+## Project Structure
+
+```
+Event/
+├── PM_2/
+│   ├── app.py                 # Main application file
+│   ├── requirements.txt       # Python dependencies
+│   ├── Procfile              # Deployment configuration
+│   ├── instance/             # Database and CSV data files
+│   │   ├── toy_planner.db    # SQLite database
+│   │   ├── hosts.csv         # Host data
+│   │   ├── musicians.csv     # Musician data
+│   │   └── show_programs.csv # Show program data
+│   ├── static/               # Static files
+│   │   ├── css/              # Stylesheets
+│   │   ├── js/               # JavaScript files
+│   │   ├── images/           # Image assets
+│   │   └── uploads/          # Uploaded files
+│   └── templates/            # HTML templates
+├── README.md                 # This file
+├── PRD.md                    # Product Requirements Document
+├── Architecture.md           # Architecture documentation
+├── API.md                    # API documentation
+├── User_Stories.md           # User stories
+└── .env.example              # Environment variables template
+```
+
+## How to Run
+
+### System Requirements
+
 - Python 3.8 or higher
 - pip (Python package manager)
 
-### Installation
+### Setup Steps
 
-1. **Clone or download the project files**
-2. **Install dependencies**:
+1. **Clone the repository**
    ```bash
+   git clone <repository-url>
+   cd Event
+   ```
+
+2. **Create virtual environment** (recommended)
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On Mac/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   cd PM_2
    pip install -r requirements.txt
    ```
 
-3. **Run the application**:
+4. **Set up environment variables**
+   - Copy `.env.example` to `.env`
+   - Update values if needed (SECRET_KEY, DATABASE_URL, etc.)
+
+5. **Initialize database**
+   - The database will be created automatically when you run the app
+   - Make sure CSV files are in `PM_2/instance/` folder
+
+6. **Run the application**
    ```bash
    python app.py
    ```
 
-4. **Open your browser** and navigate to:
-   ```
-   http://localhost:5000
-   ```
+7. **Access the application**
+   - Open browser and go to: `http://localhost:5000`
 
-The application will automatically create a SQLite database and populate it with sample venues.
+## How to Run Tests
 
-## 📁 Project Structure
+Currently, tests are not implemented. Future test commands will be:
+```bash
+# Unit tests
+pytest tests/
 
-```
-toy-planner/
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-├── templates/            # HTML templates
-│   ├── base.html         # Base template
-│   ├── index.html        # Home page
-│   ├── venues.html       # Venue catalog
-│   ├── venue_detail.html # Venue details
-│   ├── book_venue.html   # Booking form
-│   ├── booking_confirmation.html
-│   └── guest_rsvp.html   # RSVP system
-└── static/              # Static assets
-    ├── css/
-    │   └── style.css    # Main stylesheet
-    ├── js/
-    │   └── main.js      # JavaScript functionality
-    ├── images/          # Image uploads
-    └── uploads/         # File uploads
+# Coverage report
+pytest --cov=PM_2 tests/
 ```
 
+## Additional Documents
 
-## 🎯 User Journey Example
+- [PRD.md](PRD.md) - Product requirements and features
+- [Architecture.md](Architecture.md) - System design and architecture
+- [API.md](API.md) - API endpoints documentation
+- [User_Stories.md](User_Stories.md) - User stories and acceptance criteria
+- [User_Feedback_Survey.md](User_Feedback_Survey.md) - User feedback survey questions
+- [PM_2/.env.example](PM_2/.env.example) - Environment variables template
 
-1. **Select Event Type**: Choose "Wedding" from the main page
-2. **Filter Venues**: Set district to "Bostandyk", 200 guests, max 15,000 KZT per person
-3. **Browse Results**: View curated list of matching venues
-4. **View Details**: Click on a venue to see halls, menus, and pricing
-5. **Book Venue**: Fill out booking form with event details
-6. **Confirmation**: Receive booking confirmation with next steps
-7. **Send Invitations**: Use RSVP system to invite guests
-
-## 🔧 Customization
-
-### Adding New Venues
-Edit the `add_sample_data()` function in `app.py` to add more venues, halls, and menu items.
-
-### Styling
-Modify `static/css/style.css` to customize colors, fonts, and layout. The CSS uses CSS custom properties for easy theme customization:
-
-```css
-:root {
-    --primary-beige: #DCC5B2;
-    --soft-sand: #F0E4D3;
-    --accent-burgundy: #8B2635;
-    --accent-green: #2D5016;
-}
-```
-
-### Adding Districts
-Update the district choices in the `VenueFilterForm` class in `app.py`.
-
-## 📱 Mobile Support
-
-The platform is fully responsive and optimized for:
-- Desktop browsers
-- Tablets
-- Mobile phones
-- Touch interfaces
-
-## 🔒 Security Features
-
-- CSRF protection with Flask-WTF
-- Form validation
-- SQL injection prevention with SQLAlchemy
-- Secure file uploads
-
-## 🚀 Production Deployment
-
-For production deployment, consider:
-
-1. **Environment Variables**: Set `SECRET_KEY` as environment variable
-2. **Database**: Use PostgreSQL instead of SQLite
-3. **Web Server**: Deploy with Gunicorn + Nginx
-4. **Payment Integration**: Add Kaspi Pay or other Kazakhstan payment methods
-5. **Email Service**: Integrate email notifications for bookings
-6. **File Storage**: Use cloud storage for venue images
-
-## 🤝 Contributing
-
-This platform is designed to serve the Kazakhstan event planning market. Contributions that enhance cultural authenticity and local market fit are welcome.
-
-## 📞 Support
-
-For questions about Kazakhstan event planning traditions or platform features, please refer to the cultural information included in the RSVP pages.
-
----
-
-**Made with ❤️ for Kazakhstan** 🇰🇿
-
-*Celebrating traditions while embracing modern convenience*
-:)
-:)))
-:))))
-oh lord
-new nnew
-ss)))
-)))) :))) ))))) ))))
