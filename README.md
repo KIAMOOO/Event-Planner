@@ -61,7 +61,7 @@ Event/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Event
+   cd PM_2
    ```
 
 2. **Create virtual environment** (recommended)
@@ -114,4 +114,5 @@ pytest --cov=PM_2 tests/
 - [User_Stories.md](User_Stories.md) - User stories and acceptance criteria
 - [User_Feedback_Survey.md](User_Feedback_Survey.md) - User feedback survey questions
 - [PM_2/.env.example](PM_2/.env.example) - Environment variables template
+
 
