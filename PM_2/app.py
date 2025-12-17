@@ -948,6 +948,11 @@ def payment_confirmation():
         
         db.session.add(booking)
         db.session.commit()
+
+        # After successful payment, log this user into the current session
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        session['user_phone'] = user.phone
         
         # Clear session data
         session.pop('booking_data', None)
