@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#8B2635">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
     <title>{% block title %}Event Planner - Kazakhstan Event Planning{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +20,7 @@
             <a href="{{ url_for('index') }}" class="logo" style="white-space: nowrap;">🎭 Event Planner</a>
             
             <!-- Mobile menu toggle button -->
-            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
